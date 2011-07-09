@@ -85,11 +85,11 @@ def initParams():
         node.alignment = "right"
         node.color="0D1C45"
         node.opacity = 1
-        node.parawidth = 300
+        #node.parawidth = 300
         node.width = 300
         node.x -= 300
         node.font = "Eurostile"
-        node.size = 14 
+        node.fontsize = 14 
     for y in range(4):
         for x in range(3):
             id_base = "sys"+str(x+1)+str(y+1)
