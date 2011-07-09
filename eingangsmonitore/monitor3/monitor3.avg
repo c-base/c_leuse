@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE avg SYSTEM "../../libavg/doc/avg.dtd">
+<avg id="main" width="800" height="600" onkeyup="onkey">
+  <div id="topscreen_bkgr" x="0" y="0" width="800" height="300">
+    <image x="0" y="0" href="../media/hintergrund_rillen.png"/>
+  </div>
+  <div id="bottomscreen_bkgr" x="0" y="300" width="800" height="300" opacity="1">
+    <image x="0" y="0" href="../media/hintergrund_rillen.png"/>
+  </div>
+  <video id="bkgndvideo" x="0" y="0" width="800" height="600" opacity="0" 
+      blendmode="add" href="../media/base_loop.avi" loop="true" fps="60"/>
+  <div id="topscreen" x="0" y="0" width="800" height="300">
+    <div id="hinweise" x="16" y="50" width="768" height="250">
+      <image x="0" y="18" opacity="0.6" href="media/hinweise/kasten_60.png"/>
+      <div id="linie1" x="0" y="26">
+        <image id="creativ1" x="16" y="4" opacity="0.0" 
+                href="media/hinweise/icons/ringe/creativ_80.png"/>
+        <image id="culture1" x="16" y="4" opacity="0.8" 
+                href="media/hinweise/icons/ringe/culture_80.png"/>
+        <words id = "linie1_top" x="60" y="0" text="Seminar: prejambug" 
+                font="Eurostile" color="0D1C45" fontsize="14"/>
+        <words id = "linie1_bottom" x="60" y="16" text="14.11.2005, 15:30" 
+                font="Eurostile" color="0D1C45" fontsize="14"/>
+      </div>
+      <div id="linie2" x="0" y="83">
+        <image id="creativ2" x="16" y="4" opacity="0.0" 
+                href="media/hinweise/icons/ringe/creativ_80.png"/>
+        <image id="culture2" x="16" y="4" opacity="0.8" 
+                href="media/hinweise/icons/ringe/culture_80.png"/>
+        <words id = "linie2_top" x="60" y="0" text="Seminar: prejambug" 
+                font="Eurostile" color="0D1C45" fontsize="14"/>
+        <words id = "linie2_bottom" x="60" y="16" text="14.11.2005, 15:30" 
+                font="Eurostile" color="0D1C45" fontsize="14"/>
+      </div>
+      <div id="linie3" x="0" y="138">
+        <image id="creativ3" x="16" y="4" opacity="0.0" 
+                href="media/hinweise/icons/ringe/creativ_80.png"/>
+        <image id="culture3" x="16" y="4" opacity="0.8" 
+                href="media/hinweise/icons/ringe/culture_80.png"/>
+        <words id = "linie3_top" x="60" y="0" text="Seminar: prejambug" 
+                font="Eurostile" color="0D1C45" fontsize="14"/>
+        <words id = "linie3_bottom" x="60" y="16" text="14.11.2005, 15:30" 
+                font="Eurostile" color="0D1C45" fontsize="14"/>
+      </div>
+    </div>
+  </div>
+  <div id="bottomscreen" x="0" y="300" width="800" height="300">
+    <div id="werbung" x="12" y="50" width="776">
+        <div id="werbung_switch">
+          <div>
+            <image id="starsoda_bkgd" x="0" y="13" 
+                   href="media/werbung/starsoda/bkgd.tif"/>
+            <image id="starsoda_stern" x="100" y="8" 
+                   href="media/werbung/starsoda/stern.tif"/>
+            <image id="starsoda_starsoda" x="351" y="30" 
+                   href="media/werbung/starsoda/starsoda.tif" opacity="0"/>
+            <image id="starsoda_taste_of_time" x="196" y="87" 
+                   href="media/werbung/starsoda/taste_of_time.tif" opacity="0"/>
+            <image id="starsoda_flasche" x="-230" y="13" 
+                   href="media/werbung/starsoda/flasche.tif"/>
+          </div>
+          <div>
+            <image id="city" x="0" y="71" opacity="0" 
+                   href="media/werbung/meetandmingle/city.tif"/>
+            <div id="godzilla_group" x="550" y="4">
+              <image id="godzilla" x="0" y="0" opacity="0" 
+                     href="media/werbung/meetandmingle/godzilla.tif"/>
+              <image id="eyes" x="18" y="44" opacity="0" 
+                     href="media/werbung/meetandmingle/eyes.tif"/>
+            </div>
+            <image id="rays" x="231" y="29" opacity="0" 
+                   href="media/werbung/meetandmingle/rays.tif"/>
+            <image id="title" x="238" y="53" opacity="0" 
+                   href="media/werbung/meetandmingle/title.tif"/>
+            <image id="date" x="238" y="53" opacity="0" 
+                   href="media/werbung/meetandmingle/date.tif"/>
+          </div>
+          <div>
+            <image id="puppets_bkgd" x="0" y="0" 
+                   href="media/werbung/puppetmastaz/bkgd.tif"/>
+            <image id="puppets" x="360" y="5" 
+                    href="media/werbung/puppetmastaz/puppets.tif"/>
+            <image id="puppets_logo" x="55" y="50" 
+                    href="media/werbung/puppetmastaz/puppets_logo.tif"/>
+          </div>
+          <div>
+            <video id="ph_neutral_logo" x="240" y="0" loop="true"
+                   href="media/werbung/ph_neutral/phneut2_320x240.avi"/>
+          </div>
+          <div id="gimp_main">
+            <image id="gimp_flyer" x="0" y="-5" 
+                   href="media/werbung/gimp/gimp_logo.png" opacity="1" />
+            <words id="gimp_title" color="333333" x="-300" y="195" 
+                   text="bring out the gimp" font="eurostile" fontsize="20" />
+          </div>
+          <div>
+            <div id="active_area" width="800" height="200">
+              <video id="trailer" opacity="1.0" loop="false"
+                      href="media/werbung/c-wars/c-wars-trailer.mpg" fps="30"/>
+              <image id="moon" x="0" y="0" opacity="0" 
+                      href="media/werbung/c-wars/moon.tif"/> 
+              <image id="c-wars" x="66" y="58" opacity="0" 
+                      href="media/werbung/c-wars/c-wars.tif"/>          
+              <image id="where_past" x="48" y="148" opacity="0" 
+                      href="media/werbung/c-wars/where_past.tif"/>
+              <image id="meets_future" x="248" y="148" opacity="0" 
+                      href="media/werbung/c-wars/meets_future.tif"/>
+              <image id="www_c-wars_com" x="470" y="152" opacity="0"
+                      href="media/werbung/c-wars/www_c-wars_com.tif"/>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <image href="../media/schwarze_maske.png"/>
+</avg>

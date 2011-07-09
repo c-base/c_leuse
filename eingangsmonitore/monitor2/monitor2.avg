@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE avg SYSTEM "../../libavg/doc/avg.dtd">
+<avg id="main" width="800" height="600">
+  <div id="topscreen_bkgr" x="0" y="0" width="800" height="300">
+    <image x="0" y="0" href="../media/hintergrund_rillen.png"/>
+  </div>
+  <div id="bottomscreen_bkgr" x="0" y="300" width="800" height="300" opacity="1">
+    <image x="0" y="0" href="../media/hintergrund_rillen.png"/>
+  </div>
+  <video id="bkgndvideo" x="0" y="0" width="800" height="600" opacity="0" 
+      blendmode="add" href="../media/base_loop.avi" loop="true" fps="60"/>
+  <div id="topscreen" x="0" y="0" width="800" height="300">
+    <div id="lageplan" x="0" y="50" width="800" height="250">
+      <image x="16" y="18" opacity="0.6" href="media/lageplan/kasten_60.png"/>
+      <image x="59" y="25" href="media/lageplan/c-base.png"/>
+      <image x="80" y="78" href="media/lageplan/zeiger_c-base.png"/>
+      <image x="325" y="26" href="media/lageplan/grundriss.png"/>
+      <!-- links -->
+      <words x="217" y="42" color="0B0A3A" font="Eurostile" size="14"
+          text="bar"/>
+      <image x="255" y="52" width="192" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <image x="447" y="52" height="9" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="217" y="83" color="DF0017" font="Eurostile" size="14"
+          text="ihr standort"/>
+      <image x="335" y="92" width="84" 
+          href="media/lageplan/pixel_rot.png"/>
+      <image x="421" y="91" href="media/lageplan/person.png"/>
+      <words x="217" y="115" color="0B0A3A" font="Eurostile" size="14"
+          text="chnittstelle"/>
+      <image x="319" y="126" width="54" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="217" y="133" color="0B0A3A" font="Eurostile" size="14"
+            text="coundlab"/>
+      <image x="303" y="143" width="45" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="217" y="151" color="0B0A3A" font="Eurostile" size="14"
+            text="clo"/>
+      <image x="246" y="161" width="131" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <!-- rechts -->
+      <words x="589" y="51" color="0B0A3A" font="Eurostile" size="14"
+            text="clo"/>
+      <image x="491" y="62" width="90" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="589" y="68" color="0B0A3A" font="Eurostile" size="14"
+            text="ceminarraum"/>
+      <image x="521" y="79" width="60" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="589" y="101" color="0B0A3A" font="Eurostile" size="14"
+            text="nerds"/>
+      <image x="457" y="112" width="124" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="589" y="119" color="0B0A3A" font="Eurostile" size="14"
+            text="gegenstände"/>
+      <image x="495" y="130" width="86" 
+          href="media/lageplan/pixel_schwarz.png"/>
+      <words x="589" y="138" color="0B0A3A" font="Eurostile" size="14"
+            text="social construction"/>
+      <image x="526" y="149" width="55" 
+          href="media/lageplan/pixel_schwarz.png"/>
+    </div>
+  </div>
+  <div id="bottomscreen" x="0" y="300" width="800" height="300">
+    <div id="parameter" y="50">
+      <image x="16" y="18" opacity="0.6" href="media/parameter/kasten_60.png"/>
+      <words x="32" y="28" parawidth="736" color="0D1C45" font="Eurostile" 
+          size="24" alignment="right" text="lebenserhaltungssysteme:"/>
+      <words id="sys11_label"/>
+      <words id="sys12_label"/>
+      <words id="sys13_label"/>
+      <words id="sys14_label"/>
+      <words id="sys21_label"/>
+      <words id="sys22_label"/>
+      <words id="sys23_label"/>
+      <words id="sys24_label"/>
+      <words id="sys31_label"/>
+      <words id="sys32_label"/>
+      <words id="sys33_label"/>
+      <words id="sys34_label"/>
+      <words id="sys11_value"/>
+      <words id="sys12_value"/>
+      <words id="sys13_value"/>
+      <words id="sys14_value"/>
+      <words id="sys21_value"/>
+      <words id="sys22_value"/>
+      <words id="sys23_value"/>
+      <words id="sys24_value"/>
+      <words id="sys31_value"/>
+      <words id="sys32_value"/>
+      <words id="sys33_value"/>
+      <words id="sys34_value"/>
+    </div>
+  </div>
+  <image href="../media/schwarze_maske.png"/>
+</avg>

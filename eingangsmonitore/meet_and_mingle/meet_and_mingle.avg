@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE avg SYSTEM "../../libavg/doc/avg.dtd">
+<avg id="main" width="800" height="600">
+  <avg id="topscreen" x="0" y="30" width="800" height="240" z="3">
+    <image id="city" x="0" y="71" z="2" opacity="0" href="media/city.tif"/>
+    <avg id="godzilla_group" x="550" y="4" z="1">
+      <image id="godzilla" x="0" y="0" z="1" opacity="0" href="media/godzilla.tif"/>
+      <image id="eyes" x="18" y="44" z="2" opacity="0" href="media/eyes.tif"/>
+    </avg>
+    <image id="rays" x="231" y="29" z="3" opacity="0" href="media/rays.tif"/>
+    <image id="title" x="238" y="53" z="4" opacity="0" href="media/title.tif"/>
+    <image id="date" x="238" y="53" z="4" opacity="0" href="media/date.tif"/>
+  </avg>
+</avg>

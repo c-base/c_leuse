@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE avg SYSTEM "../../libavg/doc/avg.dtd">
+<avg id="main" width="1024" height="768"> 
+  <div id="active_area" x="112" y="284" width="800" height="200" z="2">
+    <image id="moon" x="0" y="0" z="2" opacity="0" href="media/moon.tif"/> 
+    <image id="c-wars" x="66" y="49" z="3" opacity="0" href="media/c-wars.tif"/>          
+    <image id="where_past" x="72" y="164" z="3" opacity="0" href="media/where_past.tif"/>
+    <image id="meets_future" x="272" y="164" z="3" opacity="0" href="media/meets_future.tif"/>
+    <image id="www_c-wars_com" x="502" y="168" z="3" opacity="0"
+        href="media/www_c-wars_com.tif"/>
+  </div>
+  <video id="trailer" x="112" y="284" z="1" opacity="1.0" loop="false"
+      href="media/c-wars-trailer.mpg"/>
+</avg>

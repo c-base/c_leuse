@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE avg SYSTEM "../../libavg/doc/avg.dtd">
+<avg id="main" width="800" height="600"> 
+  <div id="topscreen_bkgr" x="0" y="0" width="800" height="300">
+    <image x="0" y="0" href="../media/hintergrund_rillen.png"/>
+  </div>
+  <div id="bottomscreen_bkgr" x="0" y="300" width="800" height="300" opacity="1">
+    <image x="0" y="0" href="../media/hintergrund_rillen.png"/>
+  </div>
+  <video id="bkgndvideo" x="0" y="0" width="800" height="600" opacity="0" 
+      blendmode="add" href="../media/base_loop.avi" loop="true" fps="60"/>
+  <div id="topscreen" x="0" y="0" width="800" height="300">
+    <div id="willkommen" x="0" y="50" width="800" height="250">
+      <image x="16" y="18" opacity="0.6" href="media/willkommen/kasten_60.png"/>
+      <image x="16" y="75" opacity="0.7" href="media/willkommen/kasten_mitte.png"/>
+      <div id="begruessungstext" x="16" y="5" width="756">
+          <words x="800" y="85" opacity="1" 
+              text="willcommen auf der c-base" font="Daidoh Remix RoundJka" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="82" opacity="1" 
+              text="Добро пожаловать на си-бэйзе!" font="arial" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="85" opacity="1" 
+              text="willcommen auf der c-base" font="Braille AOE" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="79" opacity="1" 
+              text="willcommen auf der c-base" font="ceva" 
+              color="DF0017" fontsize="36"/>
+          <words x="800" y="84" opacity="1" 
+              text="シーベースへようこそ" font="Arial" 
+              color="DF0017" fontsize="32"/>
+          <words x="-200" y="80" width="300" opacity="1" 
+              text="ברוך הבא על שי-באיץ:" font="arial" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="80" opacity="1" 
+              text="benvenuti a bordo di c-base" font="Eurostile" 
+              color="DF0017" fontsize="26"/>
+          <words x="800" y="80" opacity="1" 
+              text="Bonvenon sur la c-bazo!" font="Eurostile" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="80" opacity="1" 
+              text="c-base yerine hoşgeldiniz!" font="arial" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="80" opacity="1" 
+              text="¡Bienvenido sobre la c-base!" font="Eurostile" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="80" opacity="1" 
+              text="Witamy na c-base!" font="Eurostile" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="82" opacity="1" 
+              text="ACCEPTVS IN C-BASE SIS!" font="Bitstream Vera Serif" 
+              color="DF0017" fontsize="22"/>
+          <words x="-150" y="78" width="300"
+              opacity="1" text="أهل وسهل في سيبا يس  " font="Arial" 
+              color="DF0017" fontsize="34"/>
+          <words x="800" y="83" opacity="1" 
+              text="willcommen  auf  der  c-base" font="LinearKonstrukt" 
+              color="DF0017" fontsize="24"/>
+          <words x="800" y="80" opacity="1" 
+              text="willcommen auf der c-base" font="persische Keilschrift" 
+              color="DF0017" fontsize="32"/>
+          <words x="800" y="80" opacity="1" 
+              text="villcommen auf der c-base" font="Nepali Vijay" 
+              color="DF0017" fontsize="32"/>
+          <words x="800" y="80" opacity="1" 
+              text="willcommen auf der c-base" font="MANTRA" 
+              color="DF0017" fontsize="32"/>
+          <image x="800" y= "80" opacity="1"
+              href="media/willkommen/hieroglyphen.png"/>
+          <image x="800" y= "77" opacity="1"
+              href="media/willkommen/chinese.png"/>
+          <words x="800" y="80" opacity="1" 
+              text="Kippis!" font="Arial" 
+              color="DF0017" fontsize="24"/>
+      </div>
+      <image x="16" y="75" opacity="1" 
+            href="media/willkommen/kasten_mitte_maske.png"/>
+    </div>
+    <image x="-90" y="30" opacity="0.6" href="../media/c-base_40.png"/>
+  </div>
+  <div id="bottomscreen" x="0" y="300" width="800" height="300" opacity="1">
+    <div id="zeit" x="0" y="50" width="800" height="250">
+      <image x="16" y="18" opacity="0.6" href="media/zeit/kasten_60.png"/>
+      <words id="stationsdatum" x="550" y="24" width="550" 
+            text="Stationszeit:  2005-10-05"  
+            font="Eurostile" alignment="right" color="0D1C45" fontsize="24"/>
+      <div id="mond" x="568" y="31">
+        <image id="mond00" href="media/zeit/mondphasen/z00_leermond.png"/>
+        <image id="mond01" href="media/zeit/mondphasen/z01.png"/>
+        <image id="mond02" href="media/zeit/mondphasen/z02.png"/>
+        <image id="mond03" href="media/zeit/mondphasen/z03.png"/>
+        <image id="mond04" href="media/zeit/mondphasen/z04.png"/>
+        <image id="mond05" href="media/zeit/mondphasen/z05.png"/>
+        <image id="mond06" href="media/zeit/mondphasen/z06.png"/>
+        <image id="mond07" href="media/zeit/mondphasen/z07_halbmond.png"/>
+        <image id="mond08" href="media/zeit/mondphasen/z08.png"/>
+        <image id="mond09" href="media/zeit/mondphasen/z09.png"/>
+        <image id="mond10" href="media/zeit/mondphasen/z10.png"/>
+        <image id="mond11" href="media/zeit/mondphasen/z11.png"/>
+        <image id="mond12" href="media/zeit/mondphasen/z12.png"/>
+        <image id="mond13" href="media/zeit/mondphasen/z13.png"/>
+        <image id="mond14" href="media/zeit/mondphasen/z14_vollmond.png"/>
+      </div>
+      <words id="stationszeit" x="768" y="24" width="768" text="14:34:34"
+          font="Eurostile" alignment="right" color="0D1C45" fontsize="24"/>
+      <words x="0" y="79" width="768" text="ceit bis zum start:"  
+          font="Eurostile" alignment="right" color="0D1C45" fontsize="24"/>
+      <words id="zeit_bis_start" x="573" y="113" width="573" 
+            text="P18Y03M04DT12H30M" 
+            font="Eurostile" alignment="right" color="0D1C45" fontsize="24"/>
+      <words id="secs_bis_start" x="768" y="113" width="195" text="17S" 
+            font="Eurostile" alignment="right" color="0D1C45" fontsize="24"/>
+    </div>
+  </div>
+  <image href="../media/schwarze_maske.png"/>
+</avg>
