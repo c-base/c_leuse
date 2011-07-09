@@ -127,7 +127,7 @@ Log.setCategories(Log.APP |
 #                 Log.BLTS    
 #                  Log.EVENTS
                   )
-Words.addFontDir("../../fonts")
+WordsNode.addFontDir("../../fonts")
 g_Player.loadFile("monitor1.avg")
 g_Player.setInterval(10, onframe)
 g_Player.setTimeout(10, newWelcome)
