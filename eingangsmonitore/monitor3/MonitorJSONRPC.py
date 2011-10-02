@@ -13,10 +13,13 @@ class PresenceMonitor(object):
     """
     def __init__(self, queue):
         self._q = queue
+     
     def login(self, uid, *args):
+        """announce that the user uid has just logged in"""
         date = datetime.now()
         return self._q.put( ('login', uid, date, args) )
     def logout(self, uid, *args):
+        """announce that the user uid has just logged out"""
         date = datetime.now()
         return self._q.put( ('logout', uid, date, args) )
     def _dispatch(self, method, params):
@@ -49,6 +52,7 @@ def forkServer(iface="localhost", port=8080):
     monitor = PresenceMonitor(_thequeue)
     server = createPresenceMonitorServer(monitor, iface, port)
     p = Process(target = server.serve_forever, args=[])
+    p.daemon = True
     p.start()
     return (p, _thequeue)
 
