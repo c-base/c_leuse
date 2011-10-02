@@ -87,6 +87,7 @@ class ContentViewer(DivNode):
         newContent = self.__oldContent
         oldContent = self.__oldContent
         newContent = content
+        self.stopContent()
         self.__activeContent = newContent
         if newContent:
             print "starting %s" % newContent
@@ -132,51 +133,6 @@ class TextContent(Content):
         self.__middleText = WordsNode(parent=self, text=text2, font='arial', color="000000", pos=(30, 80), opacity=1, fontsize=40)
         self.__bottomText = WordsNode(parent=self, text=text3, font='arial', color="000000", pos=(30, 140), opacity=1, fontsize=30)
 
-class Message(Content):
-    __timerList = []
-    __endCallback = None
-    def __init__(self, callback=None, *args, **kwargs):
-        super(Message, self).__init__(*args, **kwargs)
-        self._video = VideoNode(parent=self, href="werbung/c-wars/c-wars-trailer.mpg", size=(800,200))
-        self._message = TextContent(opacity=1, parent=self,
-            text1="Hallo " ,
-            text2="willkommen auf der c-base!",
-            text3="")
-
-    def __start_message(self):
-        self._message.opacity = 1
-
-    def __end_message(self):
-        avg.fadeOut(self._message, 500)
-
-    def abort(self):
-        for timer in self.__timerList:
-            g_player.clearInterval(timer)
-        if self._endCallback:
-            self._endCallback(self)
-        else:
-            print 'no callback defined'
-        super(Message, self).abort()
-
-    def reset(self):
-        self._message.opcatity = 0
-
-    def start(self, callback):
-        self._endCallback = callback
-        self.reset()
-        self.__timerList.append(g_player.setTimeout(50, self.__start_message))
-        self.__timerList.append(g_player.setTimeout(5000, self.__end_message))
-        self.__timerList.append(g_player.setTimeout(5500, self.end))
-
-    # called by end
-    def end(self):
-        for timer in self.__timerList:
-            g_player.clearInterval(timer)
-        if self._endCallback:
-            self._endCallback(self)
-        else:
-            print 'no callback defined'
-
 class Msg(Content):
     __timerList = []
     __endCallback = None
@@ -215,9 +171,10 @@ class Msg(Content):
         self._endCallback = callback
         self.reset()
         self._video.stop()
-        self._video.play()
-        self._video.opacity = 1
-        self.__timerList.append(g_player.setTimeout(5000, self.__start_logo))
+        #self._video.play()
+        #self._video.opacity = 1
+        self._video.opacity = 0
+        self.__timerList.append(g_player.setTimeout(500, self.__start_logo))
         self.__timerList.append(g_player.setTimeout(6500, self.__last_step))
         self.__timerList.append(g_player.setTimeout(9500, self.end))
 
@@ -337,32 +294,15 @@ class MonitorMain(DivNode):
         self.bottom.addContent(self._cwars)
         self.bottom.nextContent()
 
-
     def login(self, user):
         message = Msg("login", user, opacity=0, parent=self.bottom)
         self.bottom.startContent(message)
         return 
 
-        loginText = TextContent(opacity=1, parent=self.bottom,
-            text1="Hallo %s" % user,
-            text2="willkommen auf der c-base!",
-            text3="%s" % user)
-        loginAnim = EaseInOutAnim(loginText, attrName="opacity", duration=5000, startValue=0, endValue=1, easeInDuration=500, easeOutDuration=500, onStop=lambda:self.bottom.removecContent(loginText))
-        self.bottom.addContent(loginText)
-        self.bottom.nextContent()
-
     def logout(self, user):
         message = Msg("logout", user, opacity=0, parent=self.bottom)
         self.bottom.startContent(message)
         return 
-
-        logoutText = TextContent(opacity=1, parent=self.bottom,
-            text1="",
-            text2="Bis bald %s." % user,
-            text3="") 
-        logoutAnim = EaseInOutAnim(logoutText, attrName="opacity", duration=5000, startValue=0, endValue=1, easeInDuration=500, easeOutDuration=500, onStop=lambda:self.bottom.removeContent(logoutText))
-        self.bottom.addContent(logoutText)
-        self.bottom.nextContent()
 
 class Monitor3(AVGApp):
     def init(self):
