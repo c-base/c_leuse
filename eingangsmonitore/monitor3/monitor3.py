@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 from libavg import avg, AVGApp
 from libavg.avg import DivNode,ImageNode,VideoNode,WordsNode,RectNode
 
@@ -186,7 +188,57 @@ class Msg(Content):
             self._endCallback(self)
         else:
             print 'no callback defined'
-        
+
+class Message(Content):
+    __timerList = []
+    __endCallback = None
+    def __init__(self, text, callback=None, *args, **kwargs):
+        super(Message, self).__init__(*args, **kwargs)
+        self._video = VideoNode(parent=self, href="werbung/c-wars/c-wars-trailer.mpg", size=(800,200))
+        lines = text.split("\n")
+        while len(lines) < 3: lines.append("")
+        self._logo = TextContent(opacity=1, parent=self, text1=lines[0], text2=lines[1], text3=lines[2])
+        self._endCallback = callback
+
+    def __start_logo(self):
+        self._logo.opacity = 1
+        avg.fadeOut(self._logo, 5000)
+
+    def __last_step(self):
+        self._video.pause()
+
+    def abort(self):
+        self._video.stop()
+        for timer in self.__timerList:
+            g_player.clearInterval(timer)
+        if self._endCallback:
+            self._endCallback(self)
+        else:
+            print 'no callback defined'
+        super(Msg, self).abort()
+
+    def reset(self):
+        self._logo.opcatity = 0
+
+    def start(self, callback):
+        self._endCallback = callback
+        self.reset()
+        self._video.stop()
+        #self._video.play()
+        #self._video.opacity = 1
+        self._video.opacity = 0
+        self.__timerList.append(g_player.setTimeout(500, self.__start_logo))
+        self.__timerList.append(g_player.setTimeout(6500, self.__last_step))
+        self.__timerList.append(g_player.setTimeout(9500, self.end))
+
+    # called by end
+    def end(self):
+        for timer in self.__timerList:
+            g_player.clearInterval(timer)
+        if self._endCallback:
+            self._endCallback(self)
+        else:
+            print 'no callback defined'
 
 class CWars(Content):
     __timerList = []
@@ -287,15 +339,12 @@ class MonitorMain(DivNode):
         # bottom
         self.bottom = ContentViewer(parent=self.bottomDiv)
         self._cwars = CWars(opacity=0, parent=self.bottom)
-        #self.bottom.addContent(TextContent(opacity=1, parent=self.bottom,
-            #text1="Hallo -----",
-            #text2="willkommen auf der c-base",
-            #text3="Um ... beginnt ..."))
         self.bottom.addContent(self._cwars)
         self.bottom.nextContent()
 
     def login(self, user):
-        message = Msg("login", user, opacity=0, parent=self.bottom)
+        #message = Msg("login", user, opacity=0, parent=self.bottom)
+        message = Message("hallo %s,\nwillcommen auf der c-base!" % user, opacity=0, parent=self.bottom)
         self.bottom.startContent(message)
         return 
 
@@ -306,7 +355,7 @@ class MonitorMain(DivNode):
 
 class Monitor3(AVGApp):
     def init(self):
-        self.jsonrpcserver, self.rpcqueue = MonitorJSONRPC.forkServer(port=9090)
+        self.jsonrpcserver, self.rpcqueue = MonitorJSONRPC.forkServer(port=8080)
         self.scheduler = g_player.setInterval(500, self.handle_jsonrpc)
         self.content = MonitorMain(mediadir="media/", size=g_player.getRootNode().size, parent=self._parentNode)
 
