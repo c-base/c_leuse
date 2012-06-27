@@ -43,7 +43,7 @@ def createPresenceMonitorServer(monitor,iface, port, cls=SimpleJSONRPCServer):
     server.register_instance(monitor)
     return server
 
-def forkServer(iface="localhost", port=8080):
+def forkServer(iface="0.0.0.0", port=9090):
     """run Server in separate process and prepare communications via Queue
     return (Process, Queue)
     """

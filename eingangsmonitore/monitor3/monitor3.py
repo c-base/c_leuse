@@ -1,5 +1,3 @@
-#! /usr/bin/python
-
 from libavg import avg, AVGApp
 from libavg.avg import DivNode,ImageNode,VideoNode,WordsNode,RectNode
 
@@ -344,7 +342,7 @@ class MonitorMain(DivNode):
 
     def login(self, user):
         #message = Msg("login", user, opacity=0, parent=self.bottom)
-        message = Message("hallo %s,\nwillcommen auf der c-base!" % user, opacity=0, parent=self.bottom)
+        message = Message("Hallo %s,\nwillkommen auf der c-base!" % user, opacity=0, parent=self.bottom)
         self.bottom.startContent(message)
         return 
 
@@ -355,7 +353,7 @@ class MonitorMain(DivNode):
 
 class Monitor3(AVGApp):
     def init(self):
-        self.jsonrpcserver, self.rpcqueue = MonitorJSONRPC.forkServer(port=8080)
+        self.jsonrpcserver, self.rpcqueue = MonitorJSONRPC.forkServer(port=9090)
         self.scheduler = g_player.setInterval(500, self.handle_jsonrpc)
         self.content = MonitorMain(mediadir="media/", size=g_player.getRootNode().size, parent=self._parentNode)
 
