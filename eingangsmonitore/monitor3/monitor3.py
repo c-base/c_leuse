@@ -353,7 +353,7 @@ class MonitorMain(DivNode):
         self.bottom.startContent(message)
         return 
 
-    def logout(self, message):
+    def message(self, message):
         msg = Msg("message", message, opacity=0, parent=self.bottom)
         self.bottom.startContent(msg)
         return 
