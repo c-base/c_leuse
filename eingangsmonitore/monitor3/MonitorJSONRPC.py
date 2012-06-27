@@ -22,8 +22,12 @@ class PresenceMonitor(object):
         """announce that the user uid has just logged out"""
         date = datetime.now()
         return self._q.put( ('logout', uid, date, args) )
+    def message(self, msg, *args):
+        """announce that the user uid has just logged out"""
+        date = datetime.now()
+        return self._q.put( ('message', msg, date, args) )
     def _dispatch(self, method, params):
-        if method not in ('login', 'logout'):
+        if method not in ('login', 'logout', 'message'):
             raise NotImplementedError()
         try:
             res = getattr(self, method)(*params)
