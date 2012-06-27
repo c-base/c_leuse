@@ -143,6 +143,8 @@ class Msg(Content):
             self._logo = TextContent(opacity=1, parent=self, text1="Hallo %s," % user, text2="willkommen auf der c-base!", text3="")
         elif type == "logout":
             self._logo = TextContent(opacity=1, parent=self, text1="", text2="Bis bald %s!" % user, text3="")
+        elif type == "message":
+            self._logo = TextContent(opacity=1, parent=self, text1="", text2=user, text3="")
         else:
             self._logo = TextContent(opacity=1, parent=self, text1="irgendwas" % user, text2="ist", text3="kaputt")
         self._endCallback = callback
@@ -351,6 +353,11 @@ class MonitorMain(DivNode):
         self.bottom.startContent(message)
         return 
 
+    def logout(self, message):
+        msg = Msg("message", message, opacity=0, parent=self.bottom)
+        self.bottom.startContent(msg)
+        return 
+
 class Monitor3(AVGApp):
     def init(self):
         self.jsonrpcserver, self.rpcqueue = MonitorJSONRPC.forkServer(port=9090)
@@ -364,9 +371,11 @@ class Monitor3(AVGApp):
             user = event[1]
             timestamp = event[2]
             if event[0] == "login":
-                self.content.login(user)    
+                self.content.login(user) 
             elif event[0] == "logout":
                 self.content.logout(user)
+            elif event[0] == "message":
+                self.content.message(user)
             else:
                 # unknown event, do nothing
                 pass
