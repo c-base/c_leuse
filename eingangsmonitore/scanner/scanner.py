@@ -45,8 +45,8 @@ def changeMover(NewMover):
 class BodyScanner:
     def __powerOn(self):
         Log.trace(Log.APP, "Body scanner power on")
-        self.__setDataLine(avg.PARPORTDATA1, 1)
-        self.__setDataLine(avg.PARPORTDATA2, 1)
+        #self.__setDataLine(avg.PARPORTDATA1, 1)
+        #self.__setDataLine(avg.PARPORTDATA2, 1)
         self.__PowerTimeoutID = Player.setTimeout(20000, self.disable)
 #    def __setDataLineStatus(self):
 #        if self.__bConnected:
@@ -84,35 +84,35 @@ class BodyScanner:
         else:
             return 0
     def __setDataLine(self, line, value):
-        self.ParPort.setControlLine(avg.CONTROL_STROBE, 0)
+        #self.ParPort.setControlLine(avg.CONTROL_STROBE, 0)
         icon = Player.getElementByID("line_icon_"+str(self.__lineToIndex(line)))
         if value:
-            self.ParPort.setDataLines(line)
+            #self.ParPort.setDataLines(line)
             if icon:
                 icon.opacity = 0.3
             self.__DataLineStatus |= line
         else:
-            self.ParPort.clearDataLines(line)
+            #self.ParPort.clearDataLines(line)
             if icon:
                 icon.opacity = 0.1
             self.__DataLineStatus &= not(line)
-        self.ParPort.setControlLine(avg.CONTROL_STROBE, 1)
+        #self.ParPort.setControlLine(avg.CONTROL_STROBE, 1)
         time.sleep(0.001)
-        self.ParPort.setControlLine(avg.CONTROL_STROBE, 0)
+        #self.ParPort.setControlLine(avg.CONTROL_STROBE, 0)
 #        self.__setDataLineStatus()
     def __init__(self):
-        self.ParPort = avg.ParPort()
-        self.ParPort.init("")
+        #self.ParPort = avg.ParPort()
+        #self.ParPort.init("")
         self.bMotorOn = 0
         self.bMotorDir = 0
-        if self.ParPort.getStatusLine(avg.STATUS_PAPEROUT):
-            Log.trace(Log.APP, 
-                    "Parallel conrad relais board not found. Disabling body scanner.")
-            self.__bConnected = 0
-        else:
-            Log.trace(Log.APP, 
-                    "Parallel conrad relais board found. Enabling body scanner.")
-            self.__bConnected = 1
+        #if self.ParPort.getStatusLine(avg.STATUS_PAPEROUT):
+            #Log.trace(Log.APP, 
+                    #"Parallel conrad relais board not found. Disabling body scanner.")
+            #self.__bConnected = 0
+        #else:
+            #Log.trace(Log.APP, 
+                    #"Parallel conrad relais board found. Enabling body scanner.")
+            #self.__bConnected = 1
         self.lastMotorOnTime = time.time()
         self.lastMotorDirTime = time.time()
         self.__isScanning = 0
@@ -122,8 +122,8 @@ class BodyScanner:
         self.powerOff()
     def powerOff(self):
         Log.trace(Log.APP, "Body scanner power off")
-        self.__setDataLine(avg.PARPORTDATA1, 0)
-        self.__setDataLine(avg.PARPORTDATA2, 0)
+        #self.__setDataLine(avg.PARPORTDATA1, 0)
+        #self.__setDataLine(avg.PARPORTDATA2, 0)
         if self.__PowerTimeoutID:
             Player.clearInterval(self.__PowerTimeoutID)
         self.__isScanning = 0
@@ -145,57 +145,57 @@ class BodyScanner:
     def poll(self):
         def printPPLine(line, name):
             print name,
-            if self.ParPort.getStatusLine(line):
-                print ": off",
-            else:
-                print ":  on",
+            #if self.ParPort.getStatusLine(line):
+                #print ": off",
+            #else:
+                #print ":  on",
         def safeGetSignal(bLastValue, Line):
-            bNewValue = self.ParPort.getStatusLine(Line)
+            #bNewValue = self.ParPort.getStatusLine(Line)
             if not (bNewValue == bLastValue):
                 time.sleep(0.01)
-                bNewerValue = self.ParPort.getStatusLine(Line)
+                #bNewerValue = self.ParPort.getStatusLine(Line)
                 if not(bNewerValue == bNewValue):
                     Log.trace(Log.APP, "Body scanner line bouncing.")
                 return bNewerValue
             else:
                 return bLastValue
-        bMotorDir = not(safeGetSignal(self.bMotorDir, avg.STATUS_ACK))
-        bMotorOn = safeGetSignal(self.bMotorOn, avg.STATUS_BUSY)
-        if bMotorOn != self.bMotorOn:
-            if bMotorOn:
-                Log.trace(Log.APP, "Body scanner motor on signal.")
-            else:
-                Log.trace(Log.APP, "Body scanner motor off signal.")
-        if bMotorDir != self.bMotorDir:
-            if bMotorDir:
-                Log.trace(Log.APP, "Body scanner moving down signal.")
-            else:
-                Log.trace(Log.APP, "Body scanner moving up signal.")
-        if bMotorDir != self.bMotorDir or bMotorOn != self.bMotorOn:
-            if not(bMotorOn):
-                Log.trace(Log.APP, "    --> Motor is off.")
-            else:
-                if bMotorDir:
-                    Log.trace(Log.APP, "    -> Moving down.")
-                else:
-                    Log.trace(Log.APP, "    -> Moving up.")
-        if not(self.bMotorDir) and bMotorDir:
-            self.__setDataLine(avg.PARPORTDATA0, 0)
-	self.bMotorOn = bMotorOn
-        self.bMotorDir = bMotorDir
-        if self.__isScanning and not(self.bMotorOn):
-            self.powerOff()
-        if self.ParPort.getStatusLine(avg.STATUS_SELECT):
-            Player.getElementByID("warn_icon_1").opacity=0.3;
-        else:
-            Player.getElementByID("warn_icon_1").opacity=0.1;
-        if self.ParPort.getStatusLine(avg.STATUS_ERROR):
-            Player.getElementByID("warn_icon_2").opacity=0.3;
-        else:
-            Player.getElementByID("warn_icon_2").opacity=0.1;
+        #bMotorDir = not(safeGetSignal(self.bMotorDir, avg.STATUS_ACK))
+        #bMotorOn = safeGetSignal(self.bMotorOn, avg.STATUS_BUSY)
+        #if bMotorOn != self.bMotorOn:
+            #if bMotorOn:
+                #Log.trace(Log.APP, "Body scanner motor on signal.")
+            #else:
+                #Log.trace(Log.APP, "Body scanner motor off signal.")
+        #if bMotorDir != self.bMotorDir:
+            #if bMotorDir:
+                #Log.trace(Log.APP, "Body scanner moving down signal.")
+            #else:
+                #Log.trace(Log.APP, "Body scanner moving up signal.")
+        #if bMotorDir != self.bMotorDir or bMotorOn != self.bMotorOn:
+            #if not(bMotorOn):
+                #Log.trace(Log.APP, "    --> Motor is off.")
+            #else:
+                #if bMotorDir:
+                    #Log.trace(Log.APP, "    -> Moving down.")
+                #else:
+                    #Log.trace(Log.APP, "    -> Moving up.")
+        #if not(self.bMotorDir) and bMotorDir:
+            #self.__setDataLine(avg.PARPORTDATA0, 0)
+	#self.bMotorOn = bMotorOn
+        #self.bMotorDir = bMotorDir
+        #if self.__isScanning and not(self.bMotorOn):
+            #self.powerOff()
+        ##if self.ParPort.getStatusLine(avg.STATUS_SELECT):
+            #Player.getElementByID("warn_icon_1").opacity=0.3;
+        #else:
+            #Player.getElementByID("warn_icon_1").opacity=0.1;
+        #if self.ParPort.getStatusLine(avg.STATUS_ERROR):
+            #Player.getElementByID("warn_icon_2").opacity=0.3;
+        #else:
+        Player.getElementByID("warn_icon_2").opacity=0.1;
     def isUserInRoom(self):
         # (ParPort.SELECT == true) == weißes Kabel == Benutzer in Schleuse
-        return self.__bConnected or not(self.ParPort.getStatusLine(avg.STATUS_SELECT))
+        return False #self.__bConnected #or not(self.ParPort.getStatusLine(avg.STATUS_SELECT))
     def isUserInFrontOfScanner(self):
         return 0 
 #        return self.__bConnected and not(self.ParPort.getStatusLine(avg.STATUS_ERROR))
@@ -204,7 +204,7 @@ class BodyScanner:
 #    def isScannerAtBottom(self):
 #        return self.__bConnected and ParPort.getStatusLine(avg.STATUS_BUSY)
     def isScannerConnected(self):
-        return self.__bConnected
+        return False #self.__bConnected
 
 class TopRotator:
     def rotateAussenIdle(self):
@@ -1092,7 +1092,7 @@ WEITERGEHEN, ALARM, LOGIN \
 bDebug = not(os.getenv('CLEUSE_DEPLOY'))
 if (bDebug):
     #Player.setResolution(0, 512, 0, 0) 
-    Player.setResolution(0, 800, 0, 0) 
+    #Player.setResolution(0, 800, 0, 0) 
     Log.setCategories(Log.APP |
                       Log.WARNING | 
                       Log.PROFILE |
