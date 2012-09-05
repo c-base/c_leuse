@@ -29,18 +29,18 @@ def changeMover(NewMover):
     CurrentMover.onStop(NewMover)
     CurrentMover = NewMover
     CurrentMover.onStart()
-    Log.trace(Log.APP, "Mover: "+str(Status))
+    g_logger.trace(g_logger.APP, "Mover: "+str(Status))
 
 class BodyScanner:
     def __powerOn(self):
-        Log.trace(Log.APP, "Body scanner power on")
+        g_logger.trace(g_logger.APP, "Body scanner power on")
         #self.__setDataLine(avg.PARPORTDATA1, 1)
         #self.__setDataLine(avg.PARPORTDATA2, 1)
         self.__PowerTimeoutID = g_player.setTimeout(20000, self.disable)
 #    def __setDataLineStatus(self):
 #        if self.__bConnected:
 #            self.ParPort.setControlLine(avg.CONTROL_STROBE, 0)
-#            Log.trace(Log.APP, str(self.__DataLineStatus))
+#            g_logger.trace(g_logger.APP, str(self.__DataLineStatus))
 #            self.ParPort.setAllDataLines(self.__DataLineStatus)
 #            self.ParPort.setControlLine(avg.CONTROL_STROBE, 1)
 #            time.sleep(0.001)
@@ -52,7 +52,7 @@ class BodyScanner:
 #                    g_player.getElementByID("line_icon_"+str(i+1)).opacity = 0.3
 #                else:
 #                    g_player.getElementByID("line_icon_"+str(i+1)).opacity = 0.1
-#	Log.trace(Log.APP, "Data lines: "+str(self.__DataLineStatus));
+#	g_logger.trace(g_logger.APP, "Data lines: "+str(self.__DataLineStatus));
     def __lineToIndex(self, line):
         if line == avg.PARPORTDATA0:
             return 1
@@ -95,11 +95,11 @@ class BodyScanner:
         self.bMotorOn = 0
         self.bMotorDir = 0
         #if self.ParPort.getStatusLine(avg.STATUS_PAPEROUT):
-            #Log.trace(Log.APP, 
+            #g_logger.trace(g_logger.APP, 
                     #"Parallel conrad relais board not found. Disabling body scanner.")
             #self.__bConnected = 0
         #else:
-            #Log.trace(Log.APP, 
+            #g_logger.trace(g_logger.APP, 
                     #"Parallel conrad relais board found. Enabling body scanner.")
             #self.__bConnected = 1
         self.lastMotorOnTime = time.time()
@@ -110,24 +110,24 @@ class BodyScanner:
     def delete(self):
         self.powerOff()
     def powerOff(self):
-        Log.trace(Log.APP, "Body scanner power off")
+        g_logger.trace(g_logger.APP, "Body scanner power off")
         #self.__setDataLine(avg.PARPORTDATA1, 0)
         #self.__setDataLine(avg.PARPORTDATA2, 0)
         if self.__PowerTimeoutID:
             g_player.clearInterval(self.__PowerTimeoutID)
         self.__isScanning = 0
     def disable(self):
-        Log.trace(Log.APP, "Body scanner not deactivating by itself - disabling.")
+        g_logger.trace(g_logger.APP, "Body scanner not deactivating by itself - disabling.")
         self.powerOff()
         self.__bConnected = 0
     def startScan(self):
         def moveInit():
             self.__setDataLine(avg.PARPORTDATA0, 1)
-            Log.trace(Log.APP, "Body scanner move init")
+            g_logger.trace(g_logger.APP, "Body scanner move init")
         def moveInitDone():
             self.__setDataLine(avg.PARPORTDATA0, 0)
             self.__isScanning = 1
-            Log.trace(Log.APP, "Body scanner move init done")
+            g_logger.trace(g_logger.APP, "Body scanner move init done")
         self.__powerOn();
         g_player.setTimeout(400, moveInit)
         g_player.setTimeout(2500, moveInitDone) 
@@ -144,7 +144,7 @@ class BodyScanner:
                 time.sleep(0.01)
                 #bNewerValue = self.ParPort.getStatusLine(Line)
                 if not(bNewerValue == bNewValue):
-                    Log.trace(Log.APP, "Body scanner line bouncing.")
+                    g_logger.trace(g_logger.APP, "Body scanner line bouncing.")
                 return bNewerValue
             else:
                 return bLastValue
@@ -152,22 +152,22 @@ class BodyScanner:
         #bMotorOn = safeGetSignal(self.bMotorOn, avg.STATUS_BUSY)
         #if bMotorOn != self.bMotorOn:
             #if bMotorOn:
-                #Log.trace(Log.APP, "Body scanner motor on signal.")
+                #g_logger.trace(g_logger.APP, "Body scanner motor on signal.")
             #else:
-                #Log.trace(Log.APP, "Body scanner motor off signal.")
+                #g_logger.trace(g_logger.APP, "Body scanner motor off signal.")
         #if bMotorDir != self.bMotorDir:
             #if bMotorDir:
-                #Log.trace(Log.APP, "Body scanner moving down signal.")
+                #g_logger.trace(g_logger.APP, "Body scanner moving down signal.")
             #else:
-                #Log.trace(Log.APP, "Body scanner moving up signal.")
+                #g_logger.trace(g_logger.APP, "Body scanner moving up signal.")
         #if bMotorDir != self.bMotorDir or bMotorOn != self.bMotorOn:
             #if not(bMotorOn):
-                #Log.trace(Log.APP, "    --> Motor is off.")
+                #g_logger.trace(g_logger.APP, "    --> Motor is off.")
             #else:
                 #if bMotorDir:
-                    #Log.trace(Log.APP, "    -> Moving down.")
+                    #g_logger.trace(g_logger.APP, "    -> Moving down.")
                 #else:
-                    #Log.trace(Log.APP, "    -> Moving up.")
+                    #g_logger.trace(g_logger.APP, "    -> Moving up.")
         #if not(self.bMotorDir) and bMotorDir:
             #self.__setDataLine(avg.PARPORTDATA0, 0)
 	#self.bMotorOn = bMotorOn
@@ -380,7 +380,7 @@ class UnbenutztMover:
         BottomRotator.rotateBottom()
         global Scanner
         if Scanner.isUserInFrontOfScanner():
-            Log.trace(Log.APP, "User in front of scanner")
+            g_logger.trace(g_logger.APP, "User in front of scanner")
             now = time.time()
             if now-self.__LastUserTime > 20:
                 changeMover(Unbenutzt_AufforderungMover())
@@ -864,7 +864,7 @@ class FremdkoerperMover:
         playSound("Beep1.wav")
         g_player.getElementByID("overlay").opacity=0.8
         WhichFremdkoerper = int(math.floor(random.random()*3))
-        Log.trace(Log.APP, "Fremdkoerper: "+str(WhichFremdkoerper))
+        g_logger.trace(g_logger.APP, "Fremdkoerper: "+str(WhichFremdkoerper))
         self.__Region=Player.getElementByID("fremdkoerper_region")
         self.__Text=Player.getElementByID("fremdkoerper_text")
         if WhichFremdkoerper==0:
@@ -991,7 +991,7 @@ def onMouseUp(Event):
 def signalHandler(signum, frame):
     global LastSignalHandler
     cleanup()
-    Log.trace(Log.APP, "Terminating on signal "+str(signum))
+    g_logger.trace(g_logger.APP, "Terminating on signal "+str(signum))
     g_player.stop() 
 
 def cleanup():
@@ -1018,7 +1018,7 @@ def handle_jsonrpc():
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
 
 g_player = avg.Player.get()
-Log = avg.Logger.get()
+g_logger = avg.Logger.get()
 scheduler = g_player.setInterval(500, handle_jsonrpc)
 
 LEER, UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG, HANDSCAN, HANDSCAN_ABGEBROCHEN, \
@@ -1030,27 +1030,27 @@ bDebug = not(os.getenv('CLEUSE_DEPLOY'))
 if (bDebug):
     #Player.setResolution(0, 512, 0, 0) 
     #Player.setResolution(0, 800, 0, 0) 
-    Log.setCategories(Log.APP |
-                      Log.WARNING | 
-                      Log.PROFILE |
-#                      Log.PROFILE_LATEFRAMES |
-                      Log.CONFIG |
-#                      Log.MEMORY  |
-#                      Log.BLTS    |
-                      Log.EVENTS)
+    g_logger.setCategories(g_logger.APP |
+                      g_logger.WARNING | 
+                      g_logger.PROFILE |
+#                      g_logger.PROFILE_LATEFRAMES |
+                      g_logger.CONFIG |
+#                      g_logger.MEMORY  |
+#                      g_logger.BLTS    |
+                      g_logger.EVENTS)
     EMPTY_TIMEOUT = 10 
 else:
     g_player.setResolution(1, 0, 0, 0)
     g_player.showCursor(0)
-    Log.setFileDest("/var/log/cleuse.log")
-    Log.setCategories(Log.APP |
-                      Log.WARNING | 
-                      Log.PROFILE |
-#                      Log.PROFILE_LATEFRAMES |
-                      Log.CONFIG |
-#                      Log.MEMORY  |
-#                      Log.BLTS    |
-                      Log.EVENTS)
+    g_logger.setFileDest("/var/log/cleuse.log")
+    g_logger.setCategories(g_logger.APP |
+                      g_logger.WARNING | 
+                      g_logger.PROFILE |
+#                      g_logger.PROFILE_LATEFRAMES |
+                      g_logger.CONFIG |
+#                      g_logger.MEMORY  |
+#                      g_logger.BLTS    |
+                      g_logger.EVENTS)
     # Time without movement until we blank the screen & dim the lights.
     EMPTY_TIMEOUT = 60*5
 g_player.loadFile("scanner.avg")
