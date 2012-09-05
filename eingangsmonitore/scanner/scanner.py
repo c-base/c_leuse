@@ -42,6 +42,7 @@ def playSound(Filename):
     pass
 
 def changeMover(NewMover):
+    global g_currentMover
     if g_currentMover:
         g_currentMover.onStop(NewMover)
     g_currentMover = NewMover
@@ -1000,6 +1001,7 @@ def onMouseUp(Event):
     global LastMovementTime
     LastMovementTime = time.time()
     global bMouseDown
+    global g_status
     bMouseDown = 0
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
