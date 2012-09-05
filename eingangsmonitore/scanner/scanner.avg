@@ -1,6 +1,4 @@
-<?xml version="1.0"?>  
-<!DOCTYPE avg SYSTEM "../../doc/avg.dtd">
-<avg width="1024" height="1536">
+<div width="1024" height="1536">
   <div id="topscreen" x="0" y="0">
     <div id="top_background" x="0" y="0">
       <image x="0" y="0" href="medien/screen_background.tif"/>
@@ -231,4 +229,4 @@
     <words x="903" y="10" fontsize="28" font="ceva"
         text="explorer"/>
   </div>
-</avg>
+</div>
