@@ -348,13 +348,15 @@ class LeerMover:
         global Status
         Status = LEER
     def onStart(self):
-        if subprocess:
-            subprocess.call(["xset", "dpms", "force", "suspend"])
+        pass
+        #if subprocess:
+        #    subprocess.call(["xset", "dpms", "force", "suspend"])
     def onFrame(self):
         pass
     def onStop(self, NewMover):
-        if subprocess:
-            subprocess.call(["xset", "dpms", "force", "on"])
+        pass
+        #if subprocess:
+        #    subprocess.call(["xset", "dpms", "force", "on"])
 
 class UnbenutztMover:
     def __init__(self):
