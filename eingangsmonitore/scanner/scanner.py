@@ -344,58 +344,16 @@ class MessageArea:
                         playSound(ImageID[3])
             self.__CurLine += 1
 
-class ConradRelais:
-    def __init__(self):
-        self.__Relais = avg.ConradRelais(Player, 0)
-        numCards = self.__Relais.getNumCards()
-        if (numCards > 0):
-            Log.trace(Log.APP, 
-                    "Serial conrad relais board found. Enabling lighting control.")
-            self.__bActive = 1
-            self.turnOff()
-            self.setAmbientLight(1)
-        else:
-            Log.trace(Log.APP, 
-                    "Serial conrad relais board not found. Disabling lighting control.")
-            self.__bActive = 0
-    def __del__(self):
-        if self.__bActive:
-            self.turnOff()
-    def turnOff(self):
-        if self.__bActive:
-            for i in range(6):
-                self.__Relais.set(0,i,0)
-    def setAmbientLight(self, bStatus):
-        if self.__bActive:
-            Log.trace(Log.APP, "Ambient light: "+str(bStatus))
-            self.__Relais.set(0, 0, bStatus)
-    def setScannerAlarmLight(self, bStatus):
-        if self.__bActive:
-            Log.trace(Log.APP, "Sacnner alarm light: "+str(bStatus))
-            self.__Relais.set(0, 1, bStatus)
-    def setAlarmLight(self, bStatus):
-        if self.__bActive:
-            Log.trace(Log.APP, "Alarm light: "+str(bStatus))
-            self.__Relais.set(0, 2, bStatus)
-    def setScannerAmbientLight(self, bStatus):
-        if self.__bActive:
-            Log.trace(Log.APP, "Scanner ambient light: "+str(bStatus))
-            self.__Relais.set(0, 3, bStatusAmbient)
-            
-
 class LeerMover:
     def __init__(self):
         global Status
         Status = LEER
     def onStart(self):
-        ConradRelais.setAmbientLight(0)
-        ConradRelais.setScannerAmbientLight(0)
         if subprocess:
             subprocess.call(["xset", "dpms", "force", "suspend"])
     def onFrame(self):
         pass
     def onStop(self, NewMover):
-        ConradRelais.setAmbientLight(1)
         if subprocess:
             subprocess.call(["xset", "dpms", "force", "on"])
 
@@ -808,8 +766,6 @@ class HandscanAbgebrochenMover:
         self.WartenNode.y = 241
         Player.getElementByID("idle").opacity = 1
         Player.getElementByID("auflage_background").opacity = 1
-        ConradRelais.setAlarmLight(1)
-        ConradRelais.setAmbientLight(0)
 
     def onFrame(self): 
         global LastMovementTime
@@ -822,8 +778,6 @@ class HandscanAbgebrochenMover:
 
     def onStop(self, NewMover): 
         MessageArea.clear()
-        ConradRelais.setAlarmLight(0)
-        ConradRelais.setAmbientLight(1)
 
 class KoerperscanMover:
     def __startVideo(self):
@@ -932,8 +886,6 @@ class FremdkoerperMover:
             self.__Region.y=300
             self.__Text.text="Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
             self.__StopFrame=50
-        ConradRelais.setAlarmLight(1)
-        ConradRelais.setAmbientLight(0)
 
     def onFrame(self):
         if self.CurFrame == self.__StopFrame:
@@ -969,8 +921,6 @@ class FremdkoerperMover:
         MessageArea.clear()
         Node = Player.getElementByID("koerperscan_rueckwaerts")
         Node.stop()
-        ConradRelais.setAlarmLight(0)
-        ConradRelais.setAmbientLight(1)
 
 class WeitergehenMover:
     def __init__(self):
@@ -1046,8 +996,6 @@ def signalHandler(signum, frame):
     Player.stop() 
 
 def cleanup():
-    global ConradRelais
-    ConradRelais.turnOff()
     Scanner.delete()
 
 def handle_jsonrpc():
@@ -1111,7 +1059,6 @@ Player.setInterval(10, onFrame)
 
 Scanner = BodyScanner() 
 Player.setInterval(100, Scanner.poll)
-ConradRelais = ConradRelais()
 LastSignalHandler = signal.signal(signal.SIGHUP, signalHandler)
 LastSignalHandler = signal.signal(signal.SIGINT, signalHandler)
 LastSignalHandler = signal.signal(signal.SIGQUIT, signalHandler)
