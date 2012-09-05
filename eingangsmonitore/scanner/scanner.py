@@ -14,6 +14,7 @@ from libavg import avg, App
 import time
 
 import MonitorJSONRPC
+import jsonrpclib
 
 try:
     import subprocess
@@ -22,6 +23,7 @@ except:
 
 g_player = avg.Player.get()
 g_logger = avg.Logger.get()
+cbeam = jsonrpclib.Server('http://10.0.1.27:4254')
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
 
@@ -306,7 +308,7 @@ class MessageArea:
                     Img = g_player.getElementByID(Image[i+1])
                     if not(Img == None):
                         Img.opacity = 0
-                    if type(Img) == type(Player.getElementByID("koerperscan")):
+                    if type(Img) == type(g_player.getElementByID("koerperscan")):
                         Img.stop()
         for ID in ["reiter5", "reiter6", "reiter7",
                 "reiter5_weiss", "reiter6_weiss", "reiter7_weiss"]:
@@ -324,7 +326,7 @@ class MessageArea:
                     else:
                         Image.y = g_player.getElementByID("line"+str(Line+1)).y
                     Image.opacity = 1
-                    if type(Image) == type(Player.getElementByID("koerperscan")):
+                    if type(Image) == type(g_player.getElementByID("koerperscan")):
                         Image.y += 2
                         Image.play()
                         g_player.setTimeout(10, lambda: Image.pause())
@@ -354,7 +356,7 @@ class MessageArea:
                     curReiterID = "reiter"+str(numLines+1)+"_weiss"
                     showImage(self.__ImageIDs[self.__CurImage][0], curReiterID, 2)
                     Image = g_player.getElementByID(self.__ImageIDs[self.__CurImage][2])
-                    if type(Image) == type(Player.getElementByID("koerperscan")):
+                    if type(Image) == type(g_player.getElementByID("koerperscan")):
                         Image.play()
                     self.__CurImage+=1
                     if ImageID[3] != "":
@@ -449,7 +451,7 @@ class Unbenutzt_AufforderungMover:
     def onStop(self, NewMover): 
         for i in range(12):
             if (i != 0 and i != 6): 
-                anim.fadeOut(Player.getElementByID("idle"+str(i)), 300)
+                avg.fadeOut(g_player.getElementByID("idle"+str(i)), 300)
   
 
 class AufforderungMover:
@@ -480,10 +482,10 @@ class AufforderungMover:
 
     def onStop(self, NewMover):
         g_player.clearInterval(self.StopTimeoutID)
-        anim.fadeOut(Player.getElementByID("aufforderung_bottom"), 300)
-        anim.fadeOut(Player.getElementByID("aufforderung_top"), 300)
-        anim.fadeOut(Player.getElementByID("idle0"), 3000)
-        anim.fadeOut(Player.getElementByID("idle6"), 3000)
+        avg.fadeOut(g_player.getElementByID("aufforderung_bottom"), 300)
+        avg.fadeOut(g_player.getElementByID("aufforderung_top"), 300)
+        avg.fadeOut(g_player.getElementByID("idle0"), 3000)
+        avg.fadeOut(g_player.getElementByID("idle6"), 3000)
 
 
 class LoginMover:
@@ -499,23 +501,22 @@ class LoginMover:
         self.START = 0
         self.SCANNING = 1
         self.Phase = self.START
-        
         self.ScanFrames = 0
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
 
     def onStart(self): 
         warten = g_player.getElementByID("warten")
-        anim.LinearAnim(warten, "x", 600, 178, 620, 0, None)
-        anim.LinearAnim(warten, "y", 600, 241, 10, 0, None)
+        avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
+        avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
         for i in range(12):
-            anim.fadeOut(Player.getElementByID("idle"+str(i)), 200)
+            avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
         self.ScanningBottomNode.y = 600
-        #Player.getElementByID("idle").opacity = 1
-        #Player.getElementByID("auflage_background").opacity = 1
+        #g_player.getElementByID("idle").opacity = 1
+        #g_player.getElementByID("auflage_background").opacity = 1
         #g_messageArea.clear()
         #g_bottomRotator.CurIdleTriangle=0
         #g_bottomRotator.TrianglePhase=0
-    
+
     def onFrame(self):
         global LastMovementTime
         g_topRotator.rotateTopIdle()
@@ -537,33 +538,44 @@ class LoginMover:
                     node.angle = 0
                     self.bRotateInnen = 0
             if (not self.bRotateInnen and not self.bRotateAussen):
-                anim.fadeOut(Player.getElementByID("warten"), 200)
+                avg.fadeOut(g_player.getElementByID("warten"), 200)
                 #node = g_player.getElementByID("line1")
                 #node.text="scanning"
                 #node.weight="bold"
-                #anim.fadeIn(node, 1000, 1.0)
-                #Player.getElementByID("line1").font="Eurostile"
-                #anim.fadeIn(Player.getElementByID("balken_ueberschriften"), 300, 1.0)
+                #avg.fadeIn(node, 1000, 1.0)
+                #g_player.getElementByID("line1").font="Eurostile"
+                #avg.fadeIn(g_player.getElementByID("balken_ueberschriften"), 300, 1.0)
                 self.Phase = self.SCANNING
         elif (self.Phase == self.SCANNING):    
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
                 # TODO: show login message
+                events = ["foo", "bar (2030)"]#cbeam.events()
+                whoresult = cbeam.who()
+                available = whoresult['available']
+                eta = whoresult['eta']
+                if len(events) > 0:
+                    eventsmsg = "<br/>".join(events)
+                else:
+                    eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
                 CurTextNode = g_player.getElementByID("loginMessage1")
-                CurTextNode.text = 'Hallo %s,' % self.user
+                #CurTextNode.rawtextmode = True
+                #text = 'Hallo %s,\nwillcommen auf der c-base!\n\nHeute an Bord:\n%s\n' % (self.user, eventsmsg)
+                text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>Heute an Bord:<br/>%s<br/>' % (self.user, eventsmsg)
+                if len(available) > 0:
+                    text = text + "<br/>An Bord: %s<br/>" % ", ".join(available)
+                if len(eta) > 0:
+                    text = text + "<br/>ETA: %s<br/>" % ", ".join(eta)
+                CurTextNode.text = text
                 CurTextNode.opacity = 1.0
-                CurTextNode = g_player.getElementByID("loginMessage2")
-                CurTextNode.opacity = 1.0
-                CurTextNode = g_player.getElementByID("loginMessage3")
-                CurTextNode.opacity = 1.0
-                #Player.getElementByID("hand42").opacity=1.0
-                #Player.getElementByID("start_scan_aufblitzen").opacity=1.0
+                #CurTextNode.text = 'Für heute sind leider keine Events eingetragen.'
+                #g_player.getElementByID("hand42").opacity=1.0
+                #g_player.getElementByID("start_scan_aufblitzen").opacity=1.0
                 playSound("bioscan.wav")
                 #node = g_player.getElementByID("handscanvideo")
                 #node.opacity=1.0
                 #node.play()
             elif (self.ScanFrames == 240):
-                g_player.getElementByID("hand42").opacity=0.0
                 changeMover(UnbenutztMover())
             #self.ScanningBottomNode.y -= 2.5 
     
@@ -571,20 +583,19 @@ class LoginMover:
         def setLine1Font():
             g_player.getElementByID("line1").font="Arial"
         g_player.getElementByID("loginMessage1").opacity=0.0
-        g_player.getElementByID("loginMessage2").opacity=0.0
-        g_player.getElementByID("loginMessage3").opacity=0.0
 
         node = g_player.getElementByID("handscanvideo")
         node.stop()
         node.opacity = 0
-        anim.fadeOut(Player.getElementByID("line1"), 300)
+        avg.fadeOut(g_player.getElementByID("line1"), 300)
         g_player.setTimeout(300, setLine1Font) 
-        anim.fadeOut(Player.getElementByID("balken_ueberschriften"), 300)
-        anim.fadeOut(Player.getElementByID("warten"), 300)
+        avg.fadeOut(g_player.getElementByID("balken_ueberschriften"), 300)
+        avg.fadeOut(g_player.getElementByID("warten"), 300)
         g_player.getElementByID("scanning_bottom").opacity=0
+        avg.fadeOut(g_player.getElementByID("auflage_gruen"), 500)
         g_player.getElementByID("handscan_balken_links").stop()
         g_player.getElementByID("handscan_balken_rechts").stop()
-        anim.fadeOut(Player.getElementByID("auflage_lila"), 300)
+        avg.fadeOut(g_player.getElementByID("auflage_lila"), 300)
         g_messageArea.clear()
         g_player.getElementByID("start_scan_aufblitzen").opacity = 0
         g_player.getElementByID("balken_ueberschriften").opacity = 0
@@ -628,10 +639,10 @@ class HandscanMover:
 
     def onStart(self): 
         warten = g_player.getElementByID("warten")
-        anim.LinearAnim(warten, "x", 600, 178, 620, 0, None)
-        anim.LinearAnim(warten, "y", 600, 241, 10, 0, None)
+        avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
+        avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
         for i in range(12):
-            anim.fadeOut(Player.getElementByID("idle"+str(i)), 200)
+            avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
         self.ScanningBottomNode.y = 600
         g_messageArea.calcTextPositions(self.TextElements, "CDF1C8", "FFFFFF")
     
@@ -654,13 +665,13 @@ class HandscanMover:
                     node.angle = 0
                     self.bRotateInnen = 0
             if (not self.bRotateInnen and not self.bRotateAussen):
-                anim.fadeOut(Player.getElementByID("warten"), 400)
+                avg.fadeOut(g_player.getElementByID("warten"), 400)
                 node = g_player.getElementByID("line1")
                 node.text="scanning"
                 node.weight="bold"
-                anim.fadeIn(node, 1000, 1.0)
+                avg.fadeIn(node, 1000, 1.0)
                 g_player.getElementByID("line1").font="Eurostile"
-                anim.fadeIn(Player.getElementByID("balken_ueberschriften"), 300, 1.0)
+                avg.fadeIn(g_player.getElementByID("balken_ueberschriften"), 300, 1.0)
                 self.Phase = self.SCANNING
         elif (self.Phase == self.SCANNING):    
             self.ScanFrames += 1
@@ -674,20 +685,20 @@ class HandscanMover:
             if (self.ScanFrames == 1):
                 g_player.getElementByID("start_scan_aufblitzen").opacity=1.0
                 playSound("bioscan.wav")
-                anim.fadeIn(Player.getElementByID("scanning_bottom"), 200, 1.0)
-                anim.fadeIn(Player.getElementByID("auflage_lila"), 200, 1.0)
+                avg.fadeIn(g_player.getElementByID("scanning_bottom"), 200, 1.0)
+                avg.fadeIn(g_player.getElementByID("auflage_lila"), 200, 1.0)
                 g_player.getElementByID("handscan_balken_links").play()
                 g_player.getElementByID("handscan_balken_rechts").play()
-                anim.fadeOut(Player.getElementByID("auflage_background"), 200)
+                avg.fadeOut(g_player.getElementByID("auflage_background"), 200)
             elif (self.ScanFrames == 6):
-                anim.fadeOut(Player.getElementByID("start_scan_aufblitzen"), 100)
+                avg.fadeOut(g_player.getElementByID("start_scan_aufblitzen"), 100)
                 node = g_player.getElementByID("handscanvideo")
                 node.opacity=1.0
                 node.play()
             elif (self.ScanFrames == 72):
                 node = g_player.getElementByID("handscanvideo")
                 node.stop()
-                anim.fadeOut(Player.getElementByID("handscanvideo"), 600)
+                avg.fadeOut(g_player.getElementByID("handscanvideo"), 600)
             elif (self.ScanFrames == 240):
                 changeMover(KoerperscanMover())
 #                if (random.random() > 0.2): 
@@ -703,14 +714,14 @@ class HandscanMover:
         node = g_player.getElementByID("handscanvideo")
         node.stop()
         node.opacity = 0
-        anim.fadeOut(Player.getElementByID("line1"), 300)
+        avg.fadeOut(g_player.getElementByID("line1"), 300)
         g_player.setTimeout(300, setLine1Font) 
-        anim.fadeOut(Player.getElementByID("balken_ueberschriften"), 300)
-        anim.fadeOut(Player.getElementByID("warten"), 300)
+        avg.fadeOut(g_player.getElementByID("balken_ueberschriften"), 300)
+        avg.fadeOut(g_player.getElementByID("warten"), 300)
         g_player.getElementByID("scanning_bottom").opacity=0
         g_player.getElementByID("handscan_balken_links").stop()
         g_player.getElementByID("handscan_balken_rechts").stop()
-        anim.fadeOut(Player.getElementByID("auflage_lila"), 300)
+        avg.fadeOut(g_player.getElementByID("auflage_lila"), 300)
         g_messageArea.clear()
         g_player.getElementByID("start_scan_aufblitzen").opacity = 0
         g_player.getElementByID("balken_ueberschriften").opacity = 0
@@ -730,17 +741,17 @@ class HandscanErkanntMover:
                 changeMover(WeitergehenMover())
             else:
                 changeMover(UnbenutztMover())
-        anim.fadeIn(Player.getElementByID("willkommen_text"), 500, 1)
-        anim.fadeIn(Player.getElementByID("green_screen"), 500, 1)
-        anim.LinearAnim(Player.getElementByID("willkommen_text"), "x", 
+        avg.fadeIn(g_player.getElementByID("willkommen_text"), 500, 1)
+        avg.fadeIn(g_player.getElementByID("green_screen"), 500, 1)
+        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "x", 
                 1000, 607, 73, 0, None)
-        anim.LinearAnim(Player.getElementByID("willkommen_text"), "y", 
+        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "y", 
                 1000, 675, 81, 0, None)
-        anim.LinearAnim(Player.getElementByID("willkommen_text"), "width",
+        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "width",
                 1000, 330, 874, 0, None)
-        anim.LinearAnim(Player.getElementByID("willkommen_text"), "height",
+        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "height",
                 1000, 13, 37, 0, None)
-        anim.fadeIn(Player.getElementByID("auflage_gruen"), 500, 1)
+        avg.fadeIn(g_player.getElementByID("auflage_gruen"), 500, 1)
         playSound("willkomm.wav")
         self.StopTimeoutID = g_player.setTimeout(4000, 
                 newMover)
@@ -751,9 +762,9 @@ class HandscanErkanntMover:
 
     def onStop(self, NewMover):
         g_player.clearInterval(self.StopTimeoutID)
-        anim.fadeOut(Player.getElementByID("willkommen_text"), 500)
-        anim.fadeOut(Player.getElementByID("green_screen"), 500)
-        anim.fadeOut(Player.getElementByID("auflage_gruen"), 500)
+        avg.fadeOut(g_player.getElementByID("willkommen_text"), 500)
+        avg.fadeOut(g_player.getElementByID("green_screen"), 500)
+        avg.fadeOut(g_player.getElementByID("auflage_gruen"), 500)
 
 
 class HandscanAbgebrochenMover:
@@ -882,22 +893,22 @@ class FremdkoerperMover:
         g_player.getElementByID("overlay").opacity=0.8
         WhichFremdkoerper = int(math.floor(random.random()*3))
         g_logger.trace(g_logger.APP, "Fremdkoerper: "+str(WhichFremdkoerper))
-        self.__Region=Player.getElementByID("fremdkoerper_region")
-        self.__Text=Player.getElementByID("fremdkoerper_text")
+        self.__Region=g_player.getElementByID("fremdkoerper_region")
+        self.__Text=g_player.getElementByID("fremdkoerper_text")
         if WhichFremdkoerper==0:
-            self.__Icon=Player.getElementByID("flugzeug")
+            self.__Icon=g_player.getElementByID("flugzeug")
             self.__Region.x=90
             self.__Region.y=300
             self.__Text.text="Bitte begeben sie sich in den bereich social engineering."
             self.__StopFrame=50
         elif WhichFremdkoerper==1:
-            self.__Icon=Player.getElementByID("implantat")
+            self.__Icon=g_player.getElementByID("implantat")
             self.__Region.x=140
             self.__Region.y=280
             self.__Text.text="Bionisches Implantat entdeckt."
             self.__StopFrame=15
         else:
-            self.__Icon=Player.getElementByID("mate")
+            self.__Icon=g_player.getElementByID("mate")
             self.__Region.x=90
             self.__Region.y=300
             self.__Text.text="Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
