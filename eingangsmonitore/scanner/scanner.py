@@ -1082,6 +1082,7 @@ try:
 #    Player.setVBlankFramerate(2)
     #Player.setFramerate(25)
     #anim.init(Player)
+    Player.showCursor(False)
     Player.play()
     Scanner.delete()
 finally:
