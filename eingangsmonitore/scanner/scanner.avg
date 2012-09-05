@@ -19,7 +19,7 @@
 -->          
     </div>
     <div id="login" x="36" y="58" opacity="1">
-        <words id="loginMessage1" x="20" y="20" fontsize="23" font="Eurostyle" text="" opacity="0" linespacing="5" width="350" />
+        <words id="loginMessage1" x="20" y="20" fontsize="23" font="Eurostile" text="" opacity="0" linespacing="5" width="350" />
     </div>
     <div id="screens" x="36" y="58" opacity="1">
         <image id="start_scan_aufblitzen" opacity="0"
