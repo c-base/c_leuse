@@ -490,11 +490,12 @@ class AufforderungMover:
 
 class LoginMover:
     user = ''
-    def __init__(self, user):
+    def __init__(self, action, user):
         global g_status
 
         g_status = LOGIN
         self.user = user
+        self.action = action
 
         self.bRotateAussen = 1
         self.bRotateInnen = 1
@@ -550,22 +551,27 @@ class LoginMover:
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
                 # TODO: show login message
-                events = cbeam.events()
-                whoresult = cbeam.who()
-                available = whoresult['available']
-                eta = whoresult['eta']
-                if len(events) > 0:
-                    eventsmsg = "<br/>".join(events)
-                else:
-                    eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 #CurTextNode.rawtextmode = True
                 #text = 'Hallo %s,\nwillcommen auf der c-base!\n\nHeute an Bord:\n%s\n' % (self.user, eventsmsg)
-                text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>Heute an Bord:<br/>%s<br/>' % (self.user, eventsmsg)
-                if len(available) > 0:
-                    text = text + "<br/>An Bord: %s<br/>" % ", ".join(available)
-                if len(eta) > 0:
-                    text = text + "<br/>ETA: %s<br/>" % ", ".join(eta)
+                if self.action == "login":
+                    events = cbeam.events()
+                    if len(events) > 0:
+                        eventsmsg = "<br/>".join(events)
+                    else:
+                        eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
+                    text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>Heute an Bord:<br/>%s<br/>' % (self.user, eventsmsg)
+                    whoresult = cbeam.who()
+                    available = whoresult['available']
+                    eta = whoresult['eta']
+                    if len(available) > 0:
+                        text = text + "<br/>An Bord: %s<br/>" % ", ".join(available)
+                    if len(eta) > 0:
+                        text = text + "<br/>ETA: %s<br/>" % ", ".join(eta)
+                elif self.action == "logout":
+                    text = 'Guten Heimflug %s<br/>' % self.user
+                elif self.action == "message":
+                    text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
                 CurTextNode.text = text
                 CurTextNode.opacity = 1.0
                 #CurTextNode.text = 'Für heute sind leider keine Events eingetragen.'
@@ -1037,14 +1043,16 @@ def handle_jsonrpc():
         user = event[1]
         #timestamp = event[2]
         if event[0] == "login":
-            changeMover(LoginMover(user))
+            changeMover(LoginMover("login", user))
             #self.content.login(user).
-        #elif event[0] == "logout"
+        elif event[0] == "logout":
+            changeMover(LoginMover("logout", user))
             #self.content.logout(user)
-        #elif event[0] == "message":
+        elif event[0] == "message":
+            changeMover(LoginMover("message", user))
             #self.content.message(user)
-        #else:
-            #pass
+        else:
+            pass
     except: pass
 
 class Cleuse(App):
@@ -1089,7 +1097,6 @@ scheduler = g_player.setInterval(500, handle_jsonrpc)
 bDebug = not(os.getenv('CLEUSE_DEPLOY'))
 if (bDebug):
     #Player.setResolution(0, 512, 0, 0) 
-    #Player.setResolution(0, 800, 0, 0) 
     g_logger.setCategories(g_logger.APP |
                       g_logger.WARNING | 
                       g_logger.PROFILE |
