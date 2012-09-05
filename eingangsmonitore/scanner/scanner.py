@@ -20,6 +20,9 @@ try:
 except:
     subprocess = False
 
+g_player = avg.Player.get()
+g_logger = avg.Logger.get()
+
 def playSound(Filename):
     # fix this playSound with the new framework
     pass
@@ -1019,8 +1022,6 @@ def handle_jsonrpc():
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
 
-g_player = avg.Player.get()
-g_logger = avg.Logger.get()
 scheduler = g_player.setInterval(500, handle_jsonrpc)
 
 LEER, UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG, HANDSCAN, HANDSCAN_ABGEBROCHEN, \
