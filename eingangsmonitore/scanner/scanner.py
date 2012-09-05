@@ -11,7 +11,6 @@
 # - Stromspar-Strategie
 import sys, os, math, random, signal, atexit
 from libavg import avg
-from libavg import anim
 import time
 
 import MonitorJSONRPC
