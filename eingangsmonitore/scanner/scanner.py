@@ -142,10 +142,10 @@ class BodyScanner:
         self.__bConnected = 0
     def startScan(self):
         def moveInit():
-            self.__setDataLine(avg.PARPORTDATA0, 1)
+            #self.__setDataLine(avg.PARPORTDATA0, 1)
             g_logger.trace(g_logger.APP, "Body scanner move init")
         def moveInitDone():
-            self.__setDataLine(avg.PARPORTDATA0, 0)
+            #self.__setDataLine(avg.PARPORTDATA0, 0)
             self.__isScanning = 1
             g_logger.trace(g_logger.APP, "Body scanner move init done")
         self.__powerOn();
