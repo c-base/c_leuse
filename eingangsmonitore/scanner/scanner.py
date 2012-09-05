@@ -22,18 +22,8 @@ except:
     subprocess = False
 
 def playSound(Filename):
-    bException = 0
-    p = 1
-    if os.path.exists("/usr/bin/aplay"):
-        while not(bException) and p > 0:
-            try:
-                p, status = os.waitpid(-1, os.WNOHANG)
-            except OSError:
-                bException = 1
-        id = os.fork()
-        if (id == 0):
-            os.execl("/usr/bin/aplay", "aplay", "-MqN", "medien/cound/"+Filename)
-            exit(0)
+    # fix this playSound with the new framework
+    pass
 
 def changeMover(NewMover):
     global CurrentMover
