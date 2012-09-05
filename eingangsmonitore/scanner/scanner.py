@@ -550,7 +550,7 @@ class LoginMover:
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
                 # TODO: show login message
-                events = ["foo", "bar (2030)"]#cbeam.events()
+                events = cbeam.events()
                 whoresult = cbeam.who()
                 available = whoresult['available']
                 eta = whoresult['eta']
