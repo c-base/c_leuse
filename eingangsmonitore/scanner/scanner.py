@@ -575,7 +575,7 @@ class LoginMover:
                 #node = g_player.getElementByID("handscanvideo")
                 #node.opacity=1.0
                 #node.play()
-            elif (self.ScanFrames == 240):
+            elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
             #self.ScanningBottomNode.y -= 2.5 
     
