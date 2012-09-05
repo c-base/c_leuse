@@ -1059,11 +1059,12 @@ class Cleuse(App):
         g_scanner = BodyScanner()
         g_status = UNBENUTZT 
         g_currentMover = UnbenutztMover()
-        print(g_currentMover)
 
         g_player.showCursor(False)
         g_player.setInterval(10, onFrame)
 
+        self._parentNode.setEventHandler(avg.CURSORUP, avg.MOUSE, onMouseUp)
+        self._parentNode.setEventHandler(avg.CURSORDOWN, avg.MOUSE, onMouseDown)
 
     def _enter(self):
         pass
