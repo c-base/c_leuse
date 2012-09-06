@@ -552,6 +552,7 @@ class LoginMover:
             if (self.ScanFrames == 1):
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
+                    avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     events = cbeam.events()
                     if len(events) > 0:
                         eventsmsg = "<br/>".join(events)
@@ -566,13 +567,14 @@ class LoginMover:
                     if len(eta) > 0:
                         text = text + "<br/>ETA: %s<br/>" % ", ".join(eta)
                 elif self.action == "logout":
+                    avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     text = 'Guten Heimflug %s<br/>' % self.user
                 elif self.action == "message":
+                    avg.fadeIn(g_player.getElementByID("auflage_rot"), 200, 1.0)
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
                 CurTextNode.text = text
                 CurTextNode.opacity = 1.0
                 playSound("bioscan.wav")
-                avg.fadeIn(g_player.getElementByID("auflage_rot"), 200, 1.0)
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
             #self.ScanningBottomNode.y -= 2.5 
@@ -587,7 +589,7 @@ class LoginMover:
         avg.fadeOut(g_player.getElementByID("balken_ueberschriften"), 300)
         avg.fadeOut(g_player.getElementByID("warten"), 300)
         g_player.getElementByID("scanning_bottom").opacity=0
-        avg.fadeOut(g_player.getElementByID("auflage_gruen"), 300)
+        avg.fadeOut(g_player.getElementByID("auflage_gruen_login"), 300)
         avg.fadeOut(g_player.getElementByID("auflage_rot"), 300)
 
 class HandscanMover:
