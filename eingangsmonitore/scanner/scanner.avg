@@ -19,7 +19,7 @@
 -->          
     </div>
     <div id="login" x="36" y="58" opacity="1">
-        <words id="loginMessage1" x="20" y="20" fontsize="23" font="Eurostile" text="" opacity="0" linespacing="5" width="350" />
+        <words id="loginMessage1" x="20" y="20" fontsize="23" font="Eurostile" text="" opacity="0" linespacing="5" width="400" />
     </div>
     <div id="screens" x="36" y="58" opacity="1">
         <image id="start_scan_aufblitzen" opacity="0"
@@ -207,6 +207,8 @@
           href="medien/03_handscan/auflage_lila.tif"/>
       <image id="auflage_gruen" opacity="0"
           href="medien/05_handscan_erkannt/auflage_gruen.tif"/>
+      <image id="auflage_rot" opacity="0"
+          href="medien/login/auflage_rot_login.tif"/>
     </div>
     <div id="status_icons" x="780" y="600">
       <image id="line_icon_1" x="0" y="0" width="15" height="16" opacity="0.1" href="medien/warn_icon.tif"/>
