@@ -521,7 +521,7 @@ class LoginMover:
     def onFrame(self):
         global LastMovementTime
         g_topRotator.rotateTopIdle()
-        g_bottomRotator.rotateBottom()
+        #g_bottomRotator.rotateBottom()
         LastMovementTime = time.time()
         if (self.Phase == self.START):
             if (self.bRotateAussen):
