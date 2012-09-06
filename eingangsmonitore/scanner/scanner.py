@@ -550,10 +550,7 @@ class LoginMover:
         elif (self.Phase == self.MESSAGE):    
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
-                # TODO: show login message
                 CurTextNode = g_player.getElementByID("loginMessage1")
-                #CurTextNode.rawtextmode = True
-                #text = 'Hallo %s,\nwillcommen auf der c-base!\n\nHeute an Bord:\n%s\n' % (self.user, eventsmsg)
                 if self.action == "login":
                     events = cbeam.events()
                     if len(events) > 0:
@@ -574,13 +571,8 @@ class LoginMover:
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
                 CurTextNode.text = text
                 CurTextNode.opacity = 1.0
-                #CurTextNode.text = 'Für heute sind leider keine Events eingetragen.'
-                #g_player.getElementByID("hand42").opacity=1.0
-                #g_player.getElementByID("start_scan_aufblitzen").opacity=1.0
                 playSound("bioscan.wav")
-                #node = g_player.getElementByID("handscanvideo")
-                #node.opacity=1.0
-                #node.play()
+                avg.fadeIn(g_player.getElementByID("auflage_rot"), 200, 1.0)
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
             #self.ScanningBottomNode.y -= 2.5 
@@ -590,21 +582,13 @@ class LoginMover:
             g_player.getElementByID("line1").font="Arial"
         g_player.getElementByID("loginMessage1").opacity=0.0
 
-        node = g_player.getElementByID("handscanvideo")
-        node.stop()
-        node.opacity = 0
         avg.fadeOut(g_player.getElementByID("line1"), 300)
         g_player.setTimeout(300, setLine1Font) 
         avg.fadeOut(g_player.getElementByID("balken_ueberschriften"), 300)
         avg.fadeOut(g_player.getElementByID("warten"), 300)
         g_player.getElementByID("scanning_bottom").opacity=0
-        avg.fadeOut(g_player.getElementByID("auflage_gruen"), 500)
-        g_player.getElementByID("handscan_balken_links").stop()
-        g_player.getElementByID("handscan_balken_rechts").stop()
-        avg.fadeOut(g_player.getElementByID("auflage_lila"), 300)
-        g_messageArea.clear()
-        g_player.getElementByID("start_scan_aufblitzen").opacity = 0
-        g_player.getElementByID("balken_ueberschriften").opacity = 0
+        avg.fadeOut(g_player.getElementByID("auflage_gruen"), 300)
+        avg.fadeOut(g_player.getElementByID("auflage_rot"), 300)
 
 class HandscanMover:
     def __init__(self):
