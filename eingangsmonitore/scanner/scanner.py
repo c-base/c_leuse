@@ -512,11 +512,6 @@ class LoginMover:
         for i in range(12):
             avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
         self.ScanningBottomNode.y = 600
-        #g_player.getElementByID("idle").opacity = 1
-        #g_player.getElementByID("auflage_background").opacity = 1
-        #g_messageArea.clear()
-        #g_bottomRotator.CurIdleTriangle=0
-        #g_bottomRotator.TrianglePhase=0
 
     def onFrame(self):
         global LastMovementTime
@@ -582,13 +577,7 @@ class LoginMover:
     def onStop(self, NewMover):
         def setLine1Font():
             g_player.getElementByID("line1").font="Arial"
-        g_player.getElementByID("loginMessage1").opacity=0.0
-
-        avg.fadeOut(g_player.getElementByID("line1"), 300)
-        g_player.setTimeout(300, setLine1Font) 
-        avg.fadeOut(g_player.getElementByID("balken_ueberschriften"), 300)
-        avg.fadeOut(g_player.getElementByID("warten"), 300)
-        g_player.getElementByID("scanning_bottom").opacity=0
+        avg.fadeOut(g_player.getElementByID("loginMessage1"), 300)
         avg.fadeOut(g_player.getElementByID("auflage_gruen_login"), 300)
         avg.fadeOut(g_player.getElementByID("auflage_rot"), 300)
 
