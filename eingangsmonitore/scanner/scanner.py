@@ -500,7 +500,7 @@ class LoginMover:
         self.bRotateAussen = 1
         self.bRotateInnen = 1
         self.START = 0
-        self.SCANNING = 1
+        self.MESSAGE = 1
         self.Phase = self.START
         self.ScanFrames = 0
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
@@ -546,8 +546,8 @@ class LoginMover:
                 #avg.fadeIn(node, 1000, 1.0)
                 #g_player.getElementByID("line1").font="Eurostile"
                 #avg.fadeIn(g_player.getElementByID("balken_ueberschriften"), 300, 1.0)
-                self.Phase = self.SCANNING
-        elif (self.Phase == self.SCANNING):    
+                self.Phase = self.MESSAGE
+        elif (self.Phase == self.MESSAGE):    
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
                 # TODO: show login message
