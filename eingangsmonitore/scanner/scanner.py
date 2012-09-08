@@ -40,6 +40,8 @@ g_status = None
 g_scanner = None
 
 def playSound(Filename):
+    node = avg.SoundNode(href='medien/cound/%s' % Filename)
+    node.play()
     # fix this playSound with the new framework
     pass
 
