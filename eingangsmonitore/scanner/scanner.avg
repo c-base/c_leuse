@@ -7,11 +7,11 @@
       <words x="903" y="736" fontsize="28" font="ceva"
           text="explorer"/>
     </div>
-    <div id="warten" x="178" y="241">
+    <div id="warten" x="178" y="241" opacity="0">
       <image id="warten_aussen" x="0" y="0" 
-          href="medien/warten_aussen.tif"/>
+          href="medien/warten_aussen.tif" />
       <image id="warten_innen" x="32" y="31" 
-          href="medien/warten_innen.tif"/>
+          href="medien/warten_innen.tif" />
     </div>
     <div id="aufforderung_top" opacity="0">
 <!--      <image id="aufforderung_icon" x="455" y="279"

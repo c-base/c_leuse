@@ -387,7 +387,7 @@ class UnbenutztMover:
         self.WartenNode = g_player.getElementByID("warten")
         self.__LastUserTime = 0
     def onStart(self):
-        self.WartenNode.opacity = 1
+        self.WartenNode.opacity = 0
         self.WartenNode.x = 178
         self.WartenNode.y = 241
         g_player.getElementByID("idle").opacity = 1
@@ -399,7 +399,7 @@ class UnbenutztMover:
         g_bottomRotator.CurIdleTriangle=0
         g_bottomRotator.TrianglePhase=0
     def onFrame(self):
-        g_topRotator.rotateTopIdle()
+        #g_topRotator.rotateTopIdle()
         g_bottomRotator.rotateBottom()
         if g_scanner.isUserInFrontOfScanner():
             g_logger.trace(g_logger.APP, "User in front of scanner")
@@ -514,6 +514,8 @@ class LoginMover:
         for i in range(12):
             avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
         self.ScanningBottomNode.y = 600
+        #playSound("bioscan.wav")
+        playSound("tos-computer-06.wav")
 
     def onFrame(self):
         global LastMovementTime
@@ -571,7 +573,6 @@ class LoginMover:
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
                 CurTextNode.text = text
                 CurTextNode.opacity = 1.0
-                playSound("bioscan.wav")
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
             #self.ScanningBottomNode.y -= 2.5 
