@@ -48,10 +48,12 @@ def playSound(Filename):
 
 def getcbeamdata():
     global g_cbeamdata
-    whoresult = cbeam.who()
-    events = cbeam.events()
-    whoresult['events'] = events
-    g_cbeamdata = whoresult
+    try:
+        whoresult = cbeam.who()
+        events = cbeam.events()
+        whoresult['events'] = events
+        g_cbeamdata = whoresult
+    except: pass
 
 def changeMover(NewMover):
     global g_currentMover
