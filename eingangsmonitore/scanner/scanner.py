@@ -40,10 +40,10 @@ g_status = None
 g_scanner = None
 
 def playSound(Filename):
-    node = avg.SoundNode(href='medien/cound/%s' % Filename)
+    node = avg.SoundNode(href='medien/cound/%s' % Filename, parent=g_player.getRootNode())
+    #self.__bioscanSound = avg.SoundNode(parent=g_player.getRootNode(), href='medien/cound/bioscan.wav')
     node.play()
     # fix this playSound with the new framework
-    pass
 
 def changeMover(NewMover):
     global g_currentMover
@@ -619,6 +619,7 @@ class HandscanMover:
         self.CurHand = 0
         self.ScanFrames = 0
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
+        #self.__bioscanSound = avg.SoundNode(parent=g_player.getRootNode(), href='medien/cound/bioscan.wav')
 
     def onStart(self): 
         warten = g_player.getElementByID("warten")
@@ -668,6 +669,7 @@ class HandscanMover:
             if (self.ScanFrames == 1):
                 g_player.getElementByID("start_scan_aufblitzen").opacity=1.0
                 playSound("bioscan.wav")
+                #self.__bioscanSound.play()
                 avg.fadeIn(g_player.getElementByID("scanning_bottom"), 200, 1.0)
                 avg.fadeIn(g_player.getElementByID("auflage_lila"), 200, 1.0)
                 g_player.getElementByID("handscan_balken_links").play()
