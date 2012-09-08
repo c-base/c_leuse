@@ -547,6 +547,7 @@ class LoginMover:
 
     def onFrame(self):
         global LastMovementTime
+        global g_cbeamdata
         g_topRotator.rotateTopIdle()
         #g_bottomRotator.rotateBottom()
         LastMovementTime = time.time()
@@ -580,16 +581,14 @@ class LoginMover:
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
-                    events = cbeam.events()
-                    cbeamdata = getcbeamdata()
-                    events = cbeamdata['events']
+                    events = g_cbeamdata['events']
                     if len(events) > 0:
                         eventsmsg = "<br/>".join(events)
                     else:
                         eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
                     text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>Heute an Bord:<br/>%s<br/>' % (self.user, eventsmsg)
-                    available = cbeamdata['available']
-                    eta = cbeamdata['eta']
+                    available = g_cbeamdata['available']
+                    eta = g_cbeamdata['eta']
                     if len(available) > 0:
                         text = text + "<br/>An Bord: %s<br/>" % ", ".join(available)
                     if len(eta) > 0:
