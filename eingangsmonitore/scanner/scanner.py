@@ -38,12 +38,20 @@ g_messageArea = None
 g_currentMover = None
 g_status = None
 g_scanner = None
+g_cbeamdata = None
 
 def playSound(Filename):
     node = avg.SoundNode(href='medien/cound/%s' % Filename, parent=g_player.getRootNode())
     #self.__bioscanSound = avg.SoundNode(parent=g_player.getRootNode(), href='medien/cound/bioscan.wav')
     node.play()
     # fix this playSound with the new framework
+
+def getcbeamdata():
+    global g_cbeamdata
+    whoresult = cbeam.who()
+    events = cbeam.events()
+    whoresult['events'] = events
+    g_cbeamdata = whoresult
 
 def changeMover(NewMover):
     global g_currentMover
@@ -386,6 +394,7 @@ class UnbenutztMover:
         g_status = UNBENUTZT
         self.WartenNode = g_player.getElementByID("warten")
         self.__LastUserTime = 0
+        self.ScanFrames = 0
     def onStart(self):
         self.WartenNode.opacity = 0
         self.WartenNode.x = 178
@@ -398,7 +407,26 @@ class UnbenutztMover:
                     lambda : changeMover(Unbenutzt_AufforderungMover()))
         g_bottomRotator.CurIdleTriangle=0
         g_bottomRotator.TrianglePhase=0
+
+
+
     def onFrame(self):
+        self.ScanFrames += 1
+        if self.ScanFrames % 1000 == 1:
+            getcbeamdata()
+            CurTextNode = g_player.getElementByID("loginMessage1")
+            cbeamdata = g_cbeamdata
+            events = cbeamdata['events']
+            if len(events) > 0:
+                eventsmsg = "<br/>".join(events)
+            else:
+                eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen.<br/><br/>Be excellent to each other!"
+            text = 'Heute an Bord:<br/>%s<br/>' % eventsmsg
+            available = cbeamdata['available']
+            eta = cbeamdata['eta']
+            CurTextNode.text = text
+            CurTextNode.opacity = 1.0
+
         #g_topRotator.rotateTopIdle()
         g_bottomRotator.rotateBottom()
         if g_scanner.isUserInFrontOfScanner():
@@ -553,14 +581,15 @@ class LoginMover:
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     events = cbeam.events()
+                    cbeamdata = getcbeamdata()
+                    events = cbeamdata['events']
                     if len(events) > 0:
                         eventsmsg = "<br/>".join(events)
                     else:
                         eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
                     text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>Heute an Bord:<br/>%s<br/>' % (self.user, eventsmsg)
-                    whoresult = cbeam.who()
-                    available = whoresult['available']
-                    eta = whoresult['eta']
+                    available = cbeamdata['available']
+                    eta = cbeamdata['eta']
                     if len(available) > 0:
                         text = text + "<br/>An Bord: %s<br/>" % ", ".join(available)
                     if len(eta) > 0:
