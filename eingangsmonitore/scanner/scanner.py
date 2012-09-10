@@ -24,6 +24,7 @@ except:
 g_player = avg.Player.get()
 g_logger = avg.Logger.get()
 cbeam = jsonrpclib.Server('http://10.0.1.27:4254')
+cout = jsonrpclib.Server('http://10.0.1.27:1775')
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
 
@@ -538,6 +539,9 @@ class LoginMover:
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
 
     def onStart(self): 
+        playSound("tos-computer-06.wav")
+        #try:
+         #   cout.tts("hallo %s, willkommen auf der c-base")
         warten = g_player.getElementByID("warten")
         avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
         avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
@@ -545,7 +549,6 @@ class LoginMover:
             avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
         self.ScanningBottomNode.y = 600
         #playSound("bioscan.wav")
-        playSound("tos-computer-06.wav")
 
     def onFrame(self):
         global LastMovementTime
@@ -597,7 +600,8 @@ class LoginMover:
                         text = text + "<br/>ETA: %s<br/>" % ", ".join(eta)
                 elif self.action == "logout":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
-                    text = 'Guten Heimflug %s<br/>' % self.user
+                    ceitloch = g_cbeamdata['ceitloch']
+                    text = 'Guten Heimflug %s!<br/><br/>Du warst dieses mal fu:r %d secunden im ceitloch.' % (self.user, ceitloch[self.user])
                 elif self.action == "message":
                     avg.fadeIn(g_player.getElementByID("auflage_rot"), 200, 1.0)
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
