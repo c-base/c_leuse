@@ -601,7 +601,9 @@ class LoginMover:
                 elif self.action == "logout":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     ceitloch = g_cbeamdata['ceitloch']
-                    text = 'Guten Heimflug %s!<br/><br/>Du warst dieses mal fu:r %d secunden im ceitloch.' % (self.user, ceitloch[self.user])
+                    text = 'Guten Heimflug %s!<br/><br/>' % self.user
+                    if self.user in ceitloch:
+                        text = text + 'Du warst dieses mal fu:r %d secunden im ceitloch. dabei hast du circa %d Liter Sauerstoff umgesetzt und ungefa:hr %d mal geblinzelt.<br/><br/>' % (ceitloch[self.user], ceitloch[self.user] * 0.4, ceitloch[self.user] / 5)
                 elif self.action == "message":
                     avg.fadeIn(g_player.getElementByID("auflage_rot"), 200, 1.0)
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
