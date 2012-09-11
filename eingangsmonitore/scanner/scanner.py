@@ -48,9 +48,7 @@ g_cbeamdata = {}
 
 def playSound(Filename):
     node = avg.SoundNode(href='medien/cound/%s' % Filename, parent=g_player.getRootNode())
-    #self.__bioscanSound = avg.SoundNode(parent=g_player.getRootNode(), href='medien/cound/bioscan.wav')
     node.play()
-    # fix this playSound with the new framework
 
 def getcbeamdata():
     return cbeamthread.getcbeamdata()
