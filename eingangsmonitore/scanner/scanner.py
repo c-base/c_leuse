@@ -9,12 +9,14 @@
 # Later:
 # - Rotator bewegen.
 # - Stromspar-Strategie
+
 import sys, os, math, random, signal, atexit
 from libavg import avg, App
 import time
 
 import MonitorJSONRPC
 import jsonrpclib
+import cbeamThread
 
 try:
     import subprocess
@@ -27,6 +29,9 @@ cbeam = jsonrpclib.Server('http://10.0.1.27:4254')
 cout = jsonrpclib.Server('http://10.0.1.27:1775')
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
+cbeamthread = cbeamThread.cbeamThread('http://10.0.1.27:4254')
+cbeamthread.setDaemon(True)
+cbeamthread.start()
 
 LEER, UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG, HANDSCAN, HANDSCAN_ABGEBROCHEN, \
 HANDSCAN_ERKANNT, AUFFORDERUNG_KOERPERSCAN, KOERPERSCAN, FREMDKOERPER, KOERPERSCAN_ERKANNT, \
@@ -39,7 +44,7 @@ g_messageArea = None
 g_currentMover = None
 g_status = None
 g_scanner = None
-g_cbeamdata = None
+g_cbeamdata = {}
 
 def playSound(Filename):
     node = avg.SoundNode(href='medien/cound/%s' % Filename, parent=g_player.getRootNode())
@@ -48,13 +53,47 @@ def playSound(Filename):
     # fix this playSound with the new framework
 
 def getcbeamdata():
-    global g_cbeamdata
-    try:
-        whoresult = cbeam.who()
-        events = cbeam.events()
-        whoresult['events'] = events
-        g_cbeamdata = whoresult
-    except: pass
+    return cbeamthread.getcbeamdata()
+    #global g_cbeamdata
+    #try:
+        #whoresult = cbeam.who()
+        #events = cbeam.events()
+        #whoresult['events'] = events
+        #g_cbeamdata = cbeamthread.getcbeamdata()
+    #except: pass
+
+def getEventMessage():
+    cbeamdata = getcbeamdata()
+    events = []
+    eventsmsg = ''
+    if 'events' in cbeamdata:
+        events = cbeamdata['events']
+    if len(events) > 0:
+        eventsmsg = "<br/>".join(events)
+    else:
+        eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
+
+    return 'Heute an Bord:<br/>%s<br/>' % eventsmsg
+
+def getWhoMessage():
+    text = ''
+    cbeamdata = getcbeamdata()
+    if 'available' in cbeamdata and len(cbeamdata['available']) > 0:
+        text = text + "An Bord: %s<br/><br/>" % ", ".join(cbeamdata['available'])
+    if 'eta' in cbeamdata and len(cbeamdata['eta']) > 0:
+        text = text + "ETA: %s<br/><br/>" % ", ".join(cbeamdata['eta'])
+    return text
+
+def getMotivationMessage():
+    return '<br/>We are excellent to each other!<br/>'
+
+def getLogoutStatsMessage(user):
+    text = ''
+    cbeamdata = getcbeamdata()
+    if 'ceitloch' in cbeamdata and user in cbeamdata['ceitloch']:
+        ceitloch = cbeamdata['ceitloch']
+        text = text + 'Du warst dieses mal fu:r %d secunden im ceitloch. dabei hast du circa %d Liter Sauerstoff umgesetzt und ungefa:hr %d mal geblinzelt.<br/><br/>' % (ceitloch[user], ceitloch[user] * 0.4, ceitloch[user] / 5)
+    return text
 
 def changeMover(NewMover):
     global g_currentMover
@@ -412,21 +451,15 @@ class UnbenutztMover:
         g_bottomRotator.TrianglePhase=0
 
 
-
     def onFrame(self):
         self.ScanFrames += 1
         if self.ScanFrames % 1000 == 1:
-            getcbeamdata()
+            #getcbeamdata() #TODO
             CurTextNode = g_player.getElementByID("loginMessage1")
-            cbeamdata = g_cbeamdata
-            events = cbeamdata['events']
-            if len(events) > 0:
-                eventsmsg = "<br/>".join(events)
-            else:
-                eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen.<br/><br/>Be excellent to each other!"
-            text = 'Heute an Bord:<br/>%s<br/>' % eventsmsg
-            available = cbeamdata['available']
-            eta = cbeamdata['eta']
+            text = getEventMessage()
+            text = text + getMotivationMessage()
+            #available = cbeamdata['available']
+            #eta = cbeamdata['eta']
             CurTextNode.text = text
             CurTextNode.opacity = 1.0
 
@@ -441,7 +474,7 @@ class UnbenutztMover:
     def onStop(self, NewMover):
         if not g_scanner.isScannerConnected:
                 g_player.clearInterval(self.TimeoutID)
-        
+
 class Unbenutzt_AufforderungMover:
     def __init__(self):
         global g_status
@@ -450,7 +483,7 @@ class Unbenutzt_AufforderungMover:
     def onStart(self): 
         self.AufforderungTopActive = 0
         self.AufforderungBottomActive = 0
-    
+
     def onFrame(self):
         g_topRotator.rotateTopIdle()
 
@@ -458,7 +491,7 @@ class Unbenutzt_AufforderungMover:
             if not ((i == 0 and self.AufforderungBottomActive) or 
                     (i == 6 and self.AufforderungTopActive)):
                 g_bottomRotator.fadeOutTriangle(i)
-        
+
         g_bottomRotator.TrianglePhase += 1
         if g_bottomRotator.TrianglePhase > 8:
             if ((g_bottomRotator.CurIdleTriangle == 4 or 
@@ -529,9 +562,9 @@ class LoginMover:
         g_status = LOGIN
         self.user = user
         self.action = action
-
         self.bRotateAussen = 1
         self.bRotateInnen = 1
+
         self.START = 0
         self.MESSAGE = 1
         self.Phase = self.START
@@ -586,24 +619,13 @@ class LoginMover:
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
-                    events = g_cbeamdata['events']
-                    if len(events) > 0:
-                        eventsmsg = "<br/>".join(events)
-                    else:
-                        eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
-                    text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>Heute an Bord:<br/>%s<br/>' % (self.user, eventsmsg)
-                    available = g_cbeamdata['available']
-                    eta = g_cbeamdata['eta']
-                    if len(available) > 0:
-                        text = text + "<br/>An Bord: %s<br/>" % ", ".join(available)
-                    if len(eta) > 0:
-                        text = text + "<br/>ETA: %s<br/>" % ", ".join(eta)
+                    text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>' % self.user
+                    text = text + getEventMessage()
+                    text = text + getWhoMessage()
                 elif self.action == "logout":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
-                    ceitloch = g_cbeamdata['ceitloch']
                     text = 'Guten Heimflug %s!<br/><br/>' % self.user
-                    if self.user in ceitloch:
-                        text = text + 'Du warst dieses mal fu:r %d secunden im ceitloch. dabei hast du circa %d Liter Sauerstoff umgesetzt und ungefa:hr %d mal geblinzelt.<br/><br/>' % (ceitloch[self.user], ceitloch[self.user] * 0.4, ceitloch[self.user] / 5)
+                    text = text + getLogoutStatsMessage(self.user)
                 elif self.action == "message":
                     avg.fadeIn(g_player.getElementByID("auflage_rot"), 200, 1.0)
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
@@ -614,9 +636,7 @@ class LoginMover:
             #self.ScanningBottomNode.y -= 2.5 
     
     def onStop(self, NewMover):
-        def setLine1Font():
-            g_player.getElementByID("line1").font="Arial"
-        avg.fadeOut(g_player.getElementByID("loginMessage1"), 300)
+        #avg.fadeOut(g_player.getElementByID("loginMessage1"), 300)
         avg.fadeOut(g_player.getElementByID("auflage_gruen_login"), 300)
         avg.fadeOut(g_player.getElementByID("auflage_rot"), 300)
 
