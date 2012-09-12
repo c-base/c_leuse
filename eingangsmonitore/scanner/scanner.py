@@ -79,7 +79,10 @@ def getWhoMessage():
     if 'available' in cbeamdata and len(cbeamdata['available']) > 0:
         text = text + "An Bord: %s<br/><br/>" % ", ".join(cbeamdata['available'])
     if 'eta' in cbeamdata and len(cbeamdata['eta']) > 0:
-        text = text + "ETA: %s<br/><br/>" % ", ".join(cbeamdata['eta'])
+        etalist = []
+        for key in sorted(cbeamdata['eta'].keys()):
+             etalist += ['%s [%s]' % (key, cbeamdata['eta'][key])]
+        text = text + "ETA: %s<br/><br/>" % ", ".join(etalist)
     return text
 
 def getMotivationMessage():
