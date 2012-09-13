@@ -14,18 +14,18 @@ class PresenceMonitor(object):
     def __init__(self, queue):
         self._q = queue
      
-    def login(self, uid, *args):
+    def login(self, uid, reminder, *args):
         """announce that the user uid has just logged in"""
         date = datetime.now()
-        return self._q.put( ('login', uid, date, args) )
-    def logout(self, uid, *args):
+        return self._q.put( ('login', uid, reminder, date, args) )
+    def logout(self, uid, reminder, *args):
         """announce that the user uid has just logged out"""
         date = datetime.now()
-        return self._q.put( ('logout', uid, date, args) )
-    def message(self, msg, *args):
+        return self._q.put( ('logout', uid, reminder, date, args) )
+    def message(self, msg, reminder, *args):
         """announce that the user uid has just logged out"""
         date = datetime.now()
-        return self._q.put( ('message', msg, date, args) )
+        return self._q.put( ('message', msg, reminder, date, args) )
     def _dispatch(self, method, params):
         if method not in ('login', 'logout', 'message'):
             raise NotImplementedError()

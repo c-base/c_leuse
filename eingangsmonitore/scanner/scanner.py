@@ -88,6 +88,12 @@ def getWhoMessage():
 def getMotivationMessage():
     return '<br/>We are excellent to each other!<br/>'
 
+def getReminderMessage(reminder):
+    if reminder == "":
+        return ''
+    else:
+        return 'Denk daran: %s<br/><br/>' % reminder
+
 def getLogoutStatsMessage(user):
     text = ''
     cbeamdata = getcbeamdata()
@@ -557,11 +563,12 @@ class AufforderungMover:
 
 class LoginMover:
     user = ''
-    def __init__(self, action, user):
+    def __init__(self, action, user, reminder):
         global g_status
 
         g_status = LOGIN
         self.user = user
+        self.reminder = reminder
         self.action = action
         self.bRotateAussen = 1
         self.bRotateInnen = 1
@@ -621,6 +628,7 @@ class LoginMover:
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>' % self.user
+                    text = text + getReminderMessage(self.reminder)
                     text = text + getEventMessage()
                     text = text + getWhoMessage()
                 elif self.action == "logout":
@@ -1078,18 +1086,20 @@ def handle_jsonrpc():
     try:
         event = rpcqueue.get(False)
         user = event[1]
+        reminder = event[2]
+        changeMover(LoginMover(event[0], user, reminder))
         #timestamp = event[2]
-        if event[0] == "login":
-            changeMover(LoginMover("login", user))
+        #if event[0] == "login":
+            #changeMover(LoginMover("login", user, reminder))
             #self.content.login(user).
-        elif event[0] == "logout":
-            changeMover(LoginMover("logout", user))
+        #elif event[0] == "logout":
+            #changeMover(LoginMover("logout", user, reminder))
             #self.content.logout(user)
-        elif event[0] == "message":
-            changeMover(LoginMover("message", user))
+        #elif event[0] == "message":
+            #changeMover(LoginMover("message", user, reminder))
             #self.content.message(user)
-        else:
-            pass
+        #else:
+            #pass
     except: pass
 
 class Cleuse(App):
