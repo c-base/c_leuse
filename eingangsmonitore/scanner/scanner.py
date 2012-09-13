@@ -88,11 +88,13 @@ def getWhoMessage():
 def getMotivationMessage():
     return '<br/>We are excellent to each other!<br/>'
 
-def getReminderMessage(reminder):
-    if reminder == "":
-        return ''
-    else:
-        return 'Denk daran: %s<br/><br/>' % reminder
+def getReminderMessage(user):
+    cbeamdata = getcbeamdata()
+    if 'reminder' in cbeamdata.keys():
+        reminder = cbeamdata['reminder']
+        if user in reminder:
+            return 'Denk daran: %s<br/><br/>' % reminder[user]
+    return ''
 
 def getLogoutStatsMessage(user):
     text = ''
@@ -563,12 +565,11 @@ class AufforderungMover:
 
 class LoginMover:
     user = ''
-    def __init__(self, action, user, reminder):
+    def __init__(self, action, user):
         global g_status
 
         g_status = LOGIN
         self.user = user
-        self.reminder = reminder
         self.action = action
         self.bRotateAussen = 1
         self.bRotateInnen = 1
@@ -628,7 +629,7 @@ class LoginMover:
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     text = 'Hallo %s,<br/>willcommen auf der c-base!<br/><br/>' % self.user
-                    text = text + getReminderMessage(self.reminder)
+                    text = text + getReminderMessage(self.user)
                     text = text + getEventMessage()
                     text = text + getWhoMessage()
                 elif self.action == "logout":
@@ -1087,7 +1088,7 @@ def handle_jsonrpc():
         event = rpcqueue.get(False)
         user = event[1]
         reminder = event[2]
-        changeMover(LoginMover(event[0], user, reminder))
+        changeMover(LoginMover(event[0], user))
         #timestamp = event[2]
         #if event[0] == "login":
             #changeMover(LoginMover("login", user, reminder))
