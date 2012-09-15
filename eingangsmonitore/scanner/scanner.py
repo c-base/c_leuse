@@ -70,7 +70,7 @@ def getEventMessage():
         eventsmsg = "<br/>".join(events)
     else:
         eventsmsg = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
-    eventsmsg.replace("&", "&amp;")
+    eventsmsg = eventsmsg.replace("&", "&amp;")
 
     return 'Heute an Bord:<br/>%s<br/>' % eventsmsg
 
