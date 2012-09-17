@@ -583,8 +583,6 @@ class LoginMover:
 
     def onStart(self): 
         playSound("tos-computer-06.wav")
-        #try:
-         #   cout.tts("hallo %s, willkommen auf der c-base")
         warten = g_player.getElementByID("warten")
         avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
         avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
@@ -633,6 +631,9 @@ class LoginMover:
                     text = text + getReminderMessage(self.user)
                     text = text + getEventMessage()
                     text = text + getWhoMessage()
+                    try:
+                        cout.tts("julia", "hallo %s, willkommen an bord." % self.user)
+                    except: pass
                 elif self.action == "logout":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     text = 'Guten Heimflug %s!<br/><br/>' % self.user
