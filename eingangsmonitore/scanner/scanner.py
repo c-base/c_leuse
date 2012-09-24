@@ -631,9 +631,6 @@ class LoginMover:
                     text = text + getReminderMessage(self.user)
                     text = text + getEventMessage()
                     text = text + getWhoMessage()
-                    try:
-                        cout.tts("julia", "hallo %s, willkommen an bord." % self.user)
-                    except: pass
                 elif self.action == "logout":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                     text = 'Guten Heimflug %s!<br/><br/>' % self.user
@@ -643,6 +640,10 @@ class LoginMover:
                     text = "Hallo unbecannte cohlenstoffeinheit!<br/><br/>c-beam kennt diese RFID noch nicht.<br/><br/>Sie lautet: %s<br/><br/>Du kannst sie im memberinterface unter<br/><br/>https://member<br/>(aus dem crewnetz erreichbar)<br/><br/>eintragen und damit deinem nick cuordnen.<br/>" % self.user
                 CurTextNode.text = text
                 CurTextNode.opacity = 1.0
+                #if self.action == "login":
+                    #try:
+                        #cout.tts("julia", "hallo %s, willkommen an bord." % self.user)
+                    #except: pass
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
             #self.ScanningBottomNode.y -= 2.5 
