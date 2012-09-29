@@ -232,6 +232,6 @@
   </div>
   <div id="bluescreen" x="0" y="0" opacity="0">
     <image x="0" y="0" href="errors/blue-screen-of-death.jpg"/>
-    <image x="0" y="768" href="errors/blue-screen-of-death.jpg" angle="3.1415"/>
+    <image x="0" y="768" href="errors/Bsod1024.jpg" angle="0"/>
   </div>
 </div>
