@@ -440,17 +440,17 @@ class LeerMover:
         #if subprocess:
         #    subprocess.call(["xset", "dpms", "force", "on"])
 
-class BluescreenMover:
+class ErrorMover:
     def __init__(self):
         global g_status
         g_status = BLUESCREEN
         self.TopscreenNode = g_player.getElementByID("topscreen")
-        self.BluescreenNode = g_player.getElementByID("bluescreen")
+        self.ErrorNode = g_player.getElementByID(random.choice(["defrag", "c64", "bluescreen"]))
         self.__LastUserTime = 0
         self.ScanFrames = 0
 
     def onStart(self):
-        self.BluescreenNode.opacity = 1
+        self.ErrorNode.opacity = 1
         self.TopscreenNode.opacity = 0
 
 
@@ -460,52 +460,7 @@ class BluescreenMover:
             changeMover(UnbenutztMover())
 
     def onStop(self, NewMover):
-        self.BluescreenNode.opacity = 0
-        self.TopscreenNode.opacity = 1
-
-class C64Mover:
-    def __init__(self):
-        global g_status
-        g_status = BLUESCREEN
-        self.TopscreenNode = g_player.getElementByID("topscreen")
-        self.C64Node = g_player.getElementByID("c64")
-        self.__LastUserTime = 0
-        self.ScanFrames = 0
-
-    def onStart(self):
-        self.C64Node.opacity = 1
-        self.TopscreenNode.opacity = 0
-
-    def onFrame(self):
-        self.ScanFrames += 1
-        if self.ScanFrames == 200:
-            changeMover(UnbenutztMover())
-
-    def onStop(self, NewMover):
-        self.C64Node.opacity = 0
-        self.TopscreenNode.opacity = 1
-
-class DefragMover:
-    def __init__(self):
-        global g_status
-        g_status = BLUESCREEN
-        self.TopscreenNode = g_player.getElementByID("topscreen")
-        self.DefragNode = g_player.getElementByID("defrag")
-        self.__LastUserTime = 0
-        self.ScanFrames = 0
-
-    def onStart(self):
-        self.DefragNode.opacity = 1
-        self.TopscreenNode.opacity = 0
-
-
-    def onFrame(self):
-        self.ScanFrames += 1
-        if self.ScanFrames == 200:
-            changeMover(UnbenutztMover())
-
-    def onStop(self, NewMover):
-        self.DefragNode.opacity = 0
+        self.ErrorNode.opacity = 0
         self.TopscreenNode.opacity = 1
 
 class UnbenutztMover:
@@ -1140,14 +1095,10 @@ def onMouseUp(Event):
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
         rnd = random.randint(1,20) 
-        if rnd < 6:
+        if rnd < 11:
             changeMover(HandscanAbgebrochenMover())
-        elif rnd < 11:
-            changeMover(DefragMover())
-        elif rnd < 16:
-            changeMover(C64Mover())
         else:
-            changeMover(BluescreenMover())
+            changeMover(ErrorMover())
     elif (g_status == WEITERGEHEN):
         changeMover(UnbenutztMover())
 
