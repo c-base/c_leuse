@@ -1094,7 +1094,10 @@ def onMouseUp(Event):
     bMouseDown = 0
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
-        changeMover(HandscanAbgebrochenMover())
+        if random.randint(1,10) < 7:
+            changeMover(HandscanAbgebrochenMover())
+        else:
+            changeMover(BluescreenMover())
     elif (g_status == WEITERGEHEN):
         changeMover(UnbenutztMover())
 
