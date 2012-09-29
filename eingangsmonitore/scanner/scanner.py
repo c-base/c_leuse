@@ -605,7 +605,6 @@ class LoginMover:
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
 
     def onStart(self): 
-        playSound("tos-computer-06.wav")
         warten = g_player.getElementByID("warten")
         avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
         avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
@@ -647,6 +646,7 @@ class LoginMover:
         elif (self.Phase == self.MESSAGE):    
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
+                playSound("tos-computer-06.wav")
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
@@ -1095,7 +1095,7 @@ def onMouseUp(Event):
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
         rnd = random.randint(1,20) 
-        if rnd < 11:
+        if rnd < 16:
             changeMover(HandscanAbgebrochenMover())
         else:
             changeMover(ErrorMover())
