@@ -35,8 +35,8 @@ cbeamthread.start()
 
 LEER, UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG, HANDSCAN, HANDSCAN_ABGEBROCHEN, \
 HANDSCAN_ERKANNT, AUFFORDERUNG_KOERPERSCAN, KOERPERSCAN, FREMDKOERPER, KOERPERSCAN_ERKANNT, \
-WEITERGEHEN, ALARM, LOGIN \
-= range(14)
+WEITERGEHEN, ALARM, LOGIN, BLUESCREEN \
+= range(15)
 
 g_topRotator = None
 g_bottomRotator = None
@@ -439,6 +439,29 @@ class LeerMover:
         pass
         #if subprocess:
         #    subprocess.call(["xset", "dpms", "force", "on"])
+
+class BluescreenMover:
+    def __init__(self):
+        global g_status
+        g_status = BLUESCREEN
+        self.TopscreenNode = g_player.getElementByID("topscreen")
+        self.BluescreenNode = g_player.getElementByID("bluescreen")
+        self.__LastUserTime = 0
+        self.ScanFrames = 0
+
+    def onStart(self):
+        self.BluescreenNode.opacity = 1
+        self.TopscreenNode.opacity = 0
+
+
+    def onFrame(self):
+        self.ScanFrames += 1
+        if self.ScanFrames == 200:
+            changeMover(UnbenutztMover())
+
+    def onStop(self, NewMover):
+        self.BluescreenNode.opacity = 0
+        self.TopscreenNode.opacity = 1
 
 class UnbenutztMover:
     def __init__(self):
@@ -1091,9 +1114,11 @@ def handle_jsonrpc():
         event = rpcqueue.get(False)
         user = event[1]
         reminder = event[2]
-        changeMover(LoginMover(event[0], user))
         #timestamp = event[2]
-        #if event[0] == "login":
+        if event[0] == "login" or event[0] == "logout" or event[0] == "message":
+            changeMover(LoginMover(event[0], user))
+        elif event[0] == "bluescreen":
+            changeMover(BluescreenMover())
             #changeMover(LoginMover("login", user, reminder))
             #self.content.login(user).
         #elif event[0] == "logout":
