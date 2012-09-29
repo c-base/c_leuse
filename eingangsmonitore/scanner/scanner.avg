@@ -234,4 +234,12 @@
     <image x="0" y="0" href="errors/blue-screen-of-death.jpg"/>
     <image x="0" y="768" href="errors/Bsod1024.jpg" angle="0"/>
   </div>
+  <div id="defrag" x="0" y="0" opacity="0">
+    <image x="0" y="0" href="errors/defrag.jpg"/>
+    <image x="0" y="768" href="errors/defrag.jpg"/>
+  </div>
+  <div id="c64" x="0" y="0" opacity="0">
+    <image x="0" y="0" href="errors/c64.png"/>
+    <image x="0" y="768" href="errors/c64.png"/>
+  </div>
 </div>
