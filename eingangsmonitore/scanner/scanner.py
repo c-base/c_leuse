@@ -17,6 +17,7 @@ import time
 import MonitorJSONRPC
 import jsonrpclib
 import cbeamThread
+import datetime
 
 try:
     import subprocess
@@ -468,6 +469,7 @@ class UnbenutztMover:
         global g_status
         g_status = UNBENUTZT
         self.WartenNode = g_player.getElementByID("warten")
+        self.TimeNode = g_player.getElementByID("time")
         self.__LastUserTime = 0
         self.ScanFrames = 0
     def onStart(self):
@@ -486,9 +488,11 @@ class UnbenutztMover:
 
     def onFrame(self):
         self.ScanFrames += 1
+        self.TimeNode.text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         if self.ScanFrames % 1000 == 1:
             #getcbeamdata() #TODO
             CurTextNode = g_player.getElementByID("loginMessage1")
+            
             text = getEventMessage()
             text = text + getMotivationMessage()
             #available = cbeamdata['available']
