@@ -474,6 +474,7 @@ class UnbenutztMover:
         self.ScanFrames = 0
     def onStart(self):
         self.WartenNode.opacity = 0
+        self.TimeNode.opacity = 1
         self.WartenNode.x = 178
         self.WartenNode.y = 241
         g_player.getElementByID("idle").opacity = 1
@@ -488,7 +489,7 @@ class UnbenutztMover:
 
     def onFrame(self):
         self.ScanFrames += 1
-        self.TimeNode.text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        self.TimeNode.text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
         if self.ScanFrames % 1000 == 1:
             #getcbeamdata() #TODO
             CurTextNode = g_player.getElementByID("loginMessage1")
@@ -509,6 +510,7 @@ class UnbenutztMover:
                 changeMover(Unbenutzt_AufforderungMover())
                 self.__LastUserTime = now
     def onStop(self, NewMover):
+        self.TimeNode.opacity = 0
         if not g_scanner.isScannerConnected:
                 g_player.clearInterval(self.TimeoutID)
 

@@ -7,7 +7,7 @@
       <words x="903" y="736" fontsize="28" font="ceva"
           text="explorer"/>
     </div>
-    <div id="TimeDisplay" x="790" y="15" opacity="1">
+    <div id="TimeDisplay" x="650" y="15" opacity="1">
         <words id="time" x="20" y="20" fontsize="23" font="Eurostile" text="" opacity="1" linespacing="5" width="400" />
     </div>
     <div id="warten" x="178" y="241" opacity="0">
