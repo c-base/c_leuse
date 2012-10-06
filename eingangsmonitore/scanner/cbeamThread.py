@@ -14,7 +14,7 @@ class cbeamThread ( threading.Thread ):
             self.cbeamdata = self.cbeam.who()
             events = self.cbeam.events()
             self.cbeamdata['events'] = events
-            sleep(10)
+            sleep(1)
     def getcbeamdata(self):
         return self.cbeamdata
 
