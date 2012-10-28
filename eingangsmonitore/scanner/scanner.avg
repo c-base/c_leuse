@@ -245,4 +245,8 @@
     <image x="0" y="0" href="errors/c64.png"/>
     <image x="0" y="768" href="errors/c64.png"/>
   </div>
+  <div id="light-virus-1" x="0" y="0" opacity="0">
+    <image x="0" y="0" href="errors/light-virus-1.jpg"/>
+    <image x="0" y="768" href="errors/light-virus-1.jpg"/>
+  </div>
 </div>
