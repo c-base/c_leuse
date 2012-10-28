@@ -51,6 +51,12 @@ def playSound(Filename):
     node = avg.SoundNode(href='medien/cound/%s' % Filename, parent=g_player.getRootNode())
     node.play()
 
+def flickerVirus():
+    if random.randint(1,200) > 190:
+        g_player.getElementByID("light-virus-1").opacity = 1.0
+    else:
+        g_player.getElementByID("light-virus-1").opacity = 0.0
+
 def getcbeamdata():
     return cbeamthread.getcbeamdata()
     #global g_cbeamdata
@@ -490,6 +496,7 @@ class UnbenutztMover:
     def onFrame(self):
         self.ScanFrames += 1
         self.TimeNode.text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
+        #flickerVirus()
         if self.ScanFrames % 1000 == 1:
             #getcbeamdata() #TODO
             CurTextNode = g_player.getElementByID("loginMessage1")
