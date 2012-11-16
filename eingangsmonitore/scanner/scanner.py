@@ -36,8 +36,8 @@ cbeamthread.start()
 
 LEER, UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG, HANDSCAN, HANDSCAN_ABGEBROCHEN, \
 HANDSCAN_ERKANNT, AUFFORDERUNG_KOERPERSCAN, KOERPERSCAN, FREMDKOERPER, KOERPERSCAN_ERKANNT, \
-WEITERGEHEN, ALARM, LOGIN, BLUESCREEN \
-= range(15)
+WEITERGEHEN, ALARM, LOGIN, BLUESCREEN, VIRUS \
+= range(16)
 
 g_topRotator = None
 g_bottomRotator = None
@@ -469,6 +469,43 @@ class ErrorMover:
     def onStop(self, NewMover):
         self.ErrorNode.opacity = 0
         self.TopscreenNode.opacity = 1
+
+class VirusMover:
+    def __init__(self):
+        global g_status
+        g_status = VIRUS
+        self.TopscreenNode = g_player.getElementByID("topscreen")
+        self.AuflageNode = g_player.getElementByID("auflage")
+        self.VirusNode = g_player.getElementByID("virus")
+        self.__LastUserTime = 0
+        self.ScanFrames = 0
+
+    def onStart(self):
+        self.VirusNode.opacity = 1
+        self.TopscreenNode.opacity = 0
+        self.AuflageNode.opacity = 0
+        videoNodeTop = avg.VideoNode(href="medien/movies/virus.avi", pos=(0,96), loop=True,
+                        parent=self.VirusNode)
+        videoNodeTop.play()
+        videoNodeBottom = avg.VideoNode(href="medien/movies/virus.avi", pos=(0,864),
+                        parent=self.VirusNode)
+        videoNodeBottom.play()
+        #g_player.getElementByID("virusvideo").play()
+        #g_player.getElementByID("virusvideo").seekToFrame(1)
+        #g_player.getElementByID("virusvideobottom").play()
+        #g_player.getElementByID("virusvideobottom").seekToFrame(1)
+
+
+
+    def onFrame(self):
+        self.ScanFrames += 1
+        if self.ScanFrames == 1200:
+            changeMover(UnbenutztMover())
+
+    def onStop(self, NewMover):
+        self.VirusNode.opacity = 0
+        self.TopscreenNode.opacity = 1
+        self.AuflageNode.opacity = 1
 
 class UnbenutztMover:
     def __init__(self):
@@ -1108,10 +1145,11 @@ def onMouseUp(Event):
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
         rnd = random.randint(1,20) 
-        if rnd < 16:
-            changeMover(HandscanAbgebrochenMover())
-        else:
-            changeMover(ErrorMover())
+        #if rnd < 16:
+            #changeMover(HandscanAbgebrochenMover())
+        #else:
+            #changeMover(ErrorMover())
+        changeMover(VirusMover())
     elif (g_status == WEITERGEHEN):
         changeMover(UnbenutztMover())
 

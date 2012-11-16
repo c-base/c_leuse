@@ -249,4 +249,6 @@
     <image x="0" y="0" href="errors/light-virus-1.jpg"/>
     <image x="0" y="768" href="errors/light-virus-1.jpg"/>
   </div>
+  <div id="virus" x="0" y="0" opacity="0">
+  </div>
 </div>
