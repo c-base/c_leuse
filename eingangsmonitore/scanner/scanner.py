@@ -484,12 +484,12 @@ class VirusMover:
         self.VirusNode.opacity = 1
         self.TopscreenNode.opacity = 0
         self.AuflageNode.opacity = 0
-        videoNodeTop = avg.VideoNode(href="medien/movies/virus.avi", pos=(0,96), loop=True,
+        self.videoNodeTop = avg.VideoNode(href="medien/movies/virus.avi", pos=(0,96), loop=True,
                         parent=self.VirusNode)
-        videoNodeTop.play()
-        videoNodeBottom = avg.VideoNode(href="medien/movies/virus.avi", pos=(0,864),
+        self.videoNodeTop.play()
+        self.videoNodeBottom = avg.VideoNode(href="medien/movies/virus.avi", pos=(0,864),
                         parent=self.VirusNode)
-        videoNodeBottom.play()
+        self.videoNodeBottom.play()
         #g_player.getElementByID("virusvideo").play()
         #g_player.getElementByID("virusvideo").seekToFrame(1)
         #g_player.getElementByID("virusvideobottom").play()
@@ -506,6 +506,8 @@ class VirusMover:
         self.VirusNode.opacity = 0
         self.TopscreenNode.opacity = 1
         self.AuflageNode.opacity = 1
+        self.videoNodeTop.stop()
+        self.videoNodeBottom.stop()
 
 class UnbenutztMover:
     def __init__(self):
