@@ -116,6 +116,7 @@ def changeMover(NewMover):
     global g_currentMover
     if g_currentMover:
         g_currentMover.onStop(NewMover)
+        del g_currentMover
     g_currentMover = NewMover
     g_currentMover.onStart()
     g_logger.trace(g_logger.APP, "Mover: "+str(g_status))
@@ -546,6 +547,8 @@ class UnbenutztMover:
             #eta = cbeamdata['eta']
             CurTextNode.text = text
             CurTextNode.opacity = 1.0
+            if random.randint(0,100) > 90:
+                changeMover(VirusMover())
 
         #g_topRotator.rotateTopIdle()
         g_bottomRotator.rotateBottom()
@@ -1147,11 +1150,11 @@ def onMouseUp(Event):
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
         rnd = random.randint(1,20) 
-        #if rnd < 16:
-            #changeMover(HandscanAbgebrochenMover())
-        #else:
+        if rnd < 16:
+            changeMover(HandscanAbgebrochenMover())
+        else:
+            changeMover(VirusMover())
             #changeMover(ErrorMover())
-        changeMover(VirusMover())
     elif (g_status == WEITERGEHEN):
         changeMover(UnbenutztMover())
 
