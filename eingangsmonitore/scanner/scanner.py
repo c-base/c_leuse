@@ -26,18 +26,18 @@ except:
 
 g_player = avg.Player.get()
 g_logger = avg.Logger.get()
-cbeam = jsonrpclib.Server('http://10.0.1.27:4254')
+cbeam = jsonrpclib.Server('http://10.0.1.27:4254/rpc/')
 cout = jsonrpclib.Server('http://10.0.1.27:1775')
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
-cbeamthread = cbeamThread.cbeamThread('http://10.0.1.27:4254')
+cbeamthread = cbeamThread.cbeamThread('http://10.0.1.27:4254/rpc/')
 cbeamthread.setDaemon(True)
 cbeamthread.start()
 
 LEER, UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG, HANDSCAN, HANDSCAN_ABGEBROCHEN, \
 HANDSCAN_ERKANNT, AUFFORDERUNG_KOERPERSCAN, KOERPERSCAN, FREMDKOERPER, KOERPERSCAN_ERKANNT, \
-WEITERGEHEN, ALARM, LOGIN, BLUESCREEN, VIRUS \
-= range(16)
+WEITERGEHEN, ALARM, LOGIN, BLUESCREEN, VIRUS, INFO \
+= range(17)
 
 g_topRotator = None
 g_bottomRotator = None
@@ -153,7 +153,7 @@ class BodyScanner:
         elif line == avg.PARPORTDATA3:
             return 4
         elif line == avg.PARPORTDATA4:
-            return 5 
+            return 5
         elif line == avg.PARPORTDATA5:
             return 6
         elif line == avg.PARPORTDATA6:
@@ -185,11 +185,11 @@ class BodyScanner:
         self.bMotorOn = 0
         self.bMotorDir = 0
         #if self.ParPort.getStatusLine(avg.STATUS_PAPEROUT):
-            #g_logger.trace(g_logger.APP, 
+            #g_logger.trace(g_logger.APP,
                     #"Parallel conrad relais board not found. Disabling body scanner.")
             #self.__bConnected = 0
         #else:
-            #g_logger.trace(g_logger.APP, 
+            #g_logger.trace(g_logger.APP,
                     #"Parallel conrad relais board found. Enabling body scanner.")
             #self.__bConnected = 1
         self.lastMotorOnTime = time.time()
@@ -220,7 +220,7 @@ class BodyScanner:
             g_logger.trace(g_logger.APP, "Body scanner move init done")
         self.__powerOn();
         g_player.setTimeout(400, moveInit)
-        g_player.setTimeout(2500, moveInitDone) 
+        g_player.setTimeout(2500, moveInitDone)
     def poll(self):
         def printPPLine(line, name):
             print name,
@@ -276,7 +276,7 @@ class BodyScanner:
         # (ParPort.SELECT == true) == weißes Kabel == Benutzer in Schleuse
         return False #self.__bConnected #or not(self.ParPort.getStatusLine(avg.STATUS_SELECT))
     def isUserInFrontOfScanner(self):
-        return 0 
+        return 0
 #        return self.__bConnected and not(self.ParPort.getStatusLine(avg.STATUS_ERROR))
     def isMovingDown(self):
         return self.bMotorDir and self.bMotorOn
@@ -289,14 +289,14 @@ class TopRotator:
     def rotateAussenIdle(self):
         aussen = g_player.getElementByID("warten_aussen")
         aussen.angle += 0.02
-        if (aussen.angle > 2*3.14159): 
+        if (aussen.angle > 2*3.14159):
             aussen.angle -= 2*3.14159
-    def rotateInnenIdle(self): 
+    def rotateInnenIdle(self):
         innen = g_player.getElementByID("warten_innen")
         innen.angle -= 0.06
         if (innen.angle < 0):
             innen.angle += 3.14159
-    def rotateTopIdle(self): 
+    def rotateTopIdle(self):
         self.rotateAussenIdle()
         self.rotateInnenIdle()
 
@@ -304,8 +304,8 @@ class BottomRotator:
     def __init__(self):
         self.CurIdleTriangle=0
         self.TrianglePhase=0
-    
-    def fadeOutTriangle(self, i): 
+
+    def fadeOutTriangle(self, i):
         node = g_player.getElementByID("idle"+str(i))
         node.opacity -= 0.02
         if (node.opacity < 0):
@@ -348,12 +348,12 @@ class MessageArea:
         for CurElem in TextElements:
             setTextLine(CurLine, CurElem.Title, "Eurostile", 18, TitleColor)
             g_player.getElementByID("line"+str(CurLine)).y -= 5
-            self.__ImageIDs.append((CurLine, CurElem.RahmenID, CurElem.ImageID, 
+            self.__ImageIDs.append((CurLine, CurElem.RahmenID, CurElem.ImageID,
                     CurElem.AudioFile))
             self.__CurImage = 0
             CurLine += 1
             for CurText in CurElem.Text:
-                setTextLine(CurLine, CurText, "Arial", 15, 
+                setTextLine(CurLine, CurText, "Arial", 15,
                         TextColor)
                 CurLine += 1
             CurLine += 2
@@ -362,8 +362,8 @@ class MessageArea:
             self.__Phase = 0
         else:
             self.__Phase = 1
-            
-    def clear(self): 
+
+    def clear(self):
         for i in range(30):
             node = g_player.getElementByID("line"+str(i))
             node.opacity=0
@@ -412,7 +412,7 @@ class MessageArea:
         elif self.__Phase == 1:
             curImageID = self.__ImageIDs[self.__CurImage]
             showImage(curImageID[0], curImageID[1], 1)
-            self.__TimeoutID = g_player.setTimeout(100, 
+            self.__TimeoutID = g_player.setTimeout(100,
                     lambda: showImage(curImageID[0], curImageID[2], 1))
             self.__CurImage+=1
             if self.__CurImage == len(self.__ImageIDs):
@@ -527,7 +527,7 @@ class UnbenutztMover:
         g_player.getElementByID("auflage_background").opacity = 1
         g_messageArea.clear()
         if not g_scanner.isScannerConnected:
-            self.TimeoutID = g_player.setTimeout(60000, 
+            self.TimeoutID = g_player.setTimeout(60000,
                     lambda : changeMover(Unbenutzt_AufforderungMover()))
         g_bottomRotator.CurIdleTriangle=0
         g_bottomRotator.TrianglePhase=0
@@ -540,7 +540,7 @@ class UnbenutztMover:
         if self.ScanFrames % 1000 == 1:
             #getcbeamdata() #TODO
             CurTextNode = g_player.getElementByID("loginMessage1")
-            
+
             text = getEventMessage()
             text = text + getMotivationMessage()
             #available = cbeamdata['available']
@@ -568,7 +568,7 @@ class Unbenutzt_AufforderungMover:
         global g_status
         g_status = UNBENUTZT_AUFFORDERUNG
 
-    def onStart(self): 
+    def onStart(self):
         self.AufforderungTopActive = 0
         self.AufforderungBottomActive = 0
 
@@ -576,23 +576,23 @@ class Unbenutzt_AufforderungMover:
         g_topRotator.rotateTopIdle()
 
         for i in range(12):
-            if not ((i == 0 and self.AufforderungBottomActive) or 
+            if not ((i == 0 and self.AufforderungBottomActive) or
                     (i == 6 and self.AufforderungTopActive)):
                 g_bottomRotator.fadeOutTriangle(i)
 
         g_bottomRotator.TrianglePhase += 1
         if g_bottomRotator.TrianglePhase > 8:
-            if ((g_bottomRotator.CurIdleTriangle == 4 or 
+            if ((g_bottomRotator.CurIdleTriangle == 4 or
                         g_bottomRotator.CurIdleTriangle == 10) and
-                    self.AufforderungBottomActive and 
+                    self.AufforderungBottomActive and
                     self.AufforderungTopActive):
                 changeMover(AufforderungMover())
-            if (not self.AufforderungTopActive or 
-                    not self.AufforderungBottomActive): 
+            if (not self.AufforderungTopActive or
+                    not self.AufforderungBottomActive):
                 node = g_player.getElementByID(
                         "idle"+str(g_bottomRotator.CurIdleTriangle))
                 node.opacity = 1.0
-            if (g_bottomRotator.CurIdleTriangle == 0): 
+            if (g_bottomRotator.CurIdleTriangle == 0):
                 self.AufforderungBottomActive = 1
             if (g_bottomRotator.CurIdleTriangle == 6):
                 self.AufforderungTopActive = 1
@@ -602,11 +602,11 @@ class Unbenutzt_AufforderungMover:
                 g_bottomRotator.CurIdleTriangle = 0
 
 
-    def onStop(self, NewMover): 
+    def onStop(self, NewMover):
         for i in range(12):
-            if (i != 0 and i != 6): 
+            if (i != 0 and i != 6):
                 avg.fadeOut(g_player.getElementByID("idle"+str(i)), 300)
-  
+
 
 class AufforderungMover:
     def __init__(self):
@@ -619,10 +619,10 @@ class AufforderungMover:
         g_player.getElementByID("aufforderung_bottom").opacity=1
         g_player.getElementByID("aufforderung_top").opacity=1
         playSound("bitteida.wav")
-        self.StopTimeoutID = g_player.setTimeout(3000, 
+        self.StopTimeoutID = g_player.setTimeout(3000,
                     lambda : changeMover(UnbenutztMover()))
 
-    def onFrame(self): 
+    def onFrame(self):
         g_topRotator.rotateTopIdle()
         self.curTriOpacity += self.triOpacityDir*0.03
         if self.curTriOpacity > 1:
@@ -659,7 +659,7 @@ class LoginMover:
         self.ScanFrames = 0
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
 
-    def onStart(self): 
+    def onStart(self):
         warten = g_player.getElementByID("warten")
         avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
         avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
@@ -676,14 +676,14 @@ class LoginMover:
         LastMovementTime = time.time()
         if (self.Phase == self.START):
             if (self.bRotateAussen):
-                node = g_player.getElementByID("warten_aussen") 
+                node = g_player.getElementByID("warten_aussen")
                 node.angle += 0.13
                 g_topRotator.rotateAussenIdle()
-                if (abs(node.angle) < 0.3): 
+                if (abs(node.angle) < 0.3):
                     node.angle = 0
                     self.bRotateAussen = 0
             if (self.bRotateInnen):
-                node = g_player.getElementByID("warten_innen") 
+                node = g_player.getElementByID("warten_innen")
                 node.angle -= 0.07
                 g_topRotator.rotateInnenIdle()
                 if (abs(node.angle) < 0.2):
@@ -698,7 +698,7 @@ class LoginMover:
                 #g_player.getElementByID("line1").font="Eurostile"
                 #avg.fadeIn(g_player.getElementByID("balken_ueberschriften"), 300, 1.0)
                 self.Phase = self.MESSAGE
-        elif (self.Phase == self.MESSAGE):    
+        elif (self.Phase == self.MESSAGE):
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
                 playSound("tos-computer-06.wav")
@@ -724,8 +724,72 @@ class LoginMover:
                     #except: pass
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
-            #self.ScanningBottomNode.y -= 2.5 
-    
+            #self.ScanningBottomNode.y -= 2.5
+
+    def onStop(self, NewMover):
+        #avg.fadeOut(g_player.getElementByID("loginMessage1"), 300)
+        avg.fadeOut(g_player.getElementByID("auflage_gruen_login"), 300)
+        avg.fadeOut(g_player.getElementByID("auflage_rot"), 300)
+
+class InfoMover:
+    def __init__(self):
+        global g_status
+
+        g_status = INFO
+        self.bRotateAussen = 1
+        self.bRotateInnen = 1
+
+        self.START = 0
+        self.MESSAGE = 1
+        self.Phase = self.START
+        self.ScanFrames = 0
+        self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
+
+    def onStart(self):
+        warten = g_player.getElementByID("warten")
+        avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
+        avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
+        for i in range(12):
+            avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
+        self.ScanningBottomNode.y = 600
+
+    def onFrame(self):
+        global LastMovementTime
+        global g_cbeamdata
+        g_topRotator.rotateTopIdle()
+        LastMovementTime = time.time()
+        if (self.Phase == self.START):
+            if (self.bRotateAussen):
+                node = g_player.getElementByID("warten_aussen")
+                node.angle += 0.13
+                g_topRotator.rotateAussenIdle()
+                if (abs(node.angle) < 0.3):
+                    node.angle = 0
+                    self.bRotateAussen = 0
+            if (self.bRotateInnen):
+                node = g_player.getElementByID("warten_innen")
+                node.angle -= 0.07
+                g_topRotator.rotateInnenIdle()
+                if (abs(node.angle) < 0.2):
+                    node.angle = 0
+                    self.bRotateInnen = 0
+            if (not self.bRotateInnen and not self.bRotateAussen):
+                avg.fadeOut(g_player.getElementByID("warten"), 200)
+                self.Phase = self.MESSAGE
+        elif (self.Phase == self.MESSAGE):
+            self.ScanFrames += 1
+            if (self.ScanFrames == 1):
+                playSound("tos-computer-06.wav")
+                CurTextNode = g_player.getElementByID("loginMessage1")
+                avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
+                text = getEventMessage()
+                text = text + getWhoMessage()
+                CurTextNode.text = text
+                CurTextNode.opacity = 1.0
+                    #except: pass
+            elif (self.ScanFrames == 720):
+                changeMover(UnbenutztMover())
+
     def onStop(self, NewMover):
         #avg.fadeOut(g_player.getElementByID("loginMessage1"), 300)
         avg.fadeOut(g_player.getElementByID("auflage_gruen_login"), 300)
@@ -740,7 +804,7 @@ class HandscanMover:
                     [ "Electrische Felder &amp; Wellen",
                       "Quantenanalyse",
                       "Atomare Zusammensetzung",
-                      "Datensynthese"], 
+                      "Datensynthese"],
                       "handscan.wav"),
                 TextElement("genetische transcription", "helix", "rahmen_3x5",
                     [ "Analyse der Alpha-Helix",
@@ -748,14 +812,14 @@ class HandscanMover:
                       "Mitochondrien",
                       "> von Crosophila",
                       "> höherer Pflanzen",
-                      "> von Säugern"], 
+                      "> von Säugern"],
                       ""),
                 TextElement("lebensform &amp; hercunft", "welt", "rahmen_5x3",
                     [ "Abgleich mit dem cosmolab",
-                      "> Welten der Sauerstoffatmer", 
+                      "> Welten der Sauerstoffatmer",
                       "> Verbotene Welten",
                       "> Virtuelle Orte",
-                      "> Träume"], 
+                      "> Träume"],
                       "")
             ]
         self.bRotateAussen = 1
@@ -763,34 +827,34 @@ class HandscanMover:
         self.START = 0
         self.SCANNING = 1
         self.Phase = self.START
-        
+
         self.CurHand = 0
         self.ScanFrames = 0
         self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
         #self.__bioscanSound = avg.SoundNode(parent=g_player.getRootNode(), href='medien/cound/bioscan.wav')
 
-    def onStart(self): 
+    def onStart(self):
         warten = g_player.getElementByID("warten")
         avg.LinearAnim(warten, "x", 600, 178, 620, 0, None)
         avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
         for i in range(12):
-            avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
+            avg.fadeOut(g_player.getElementByID("idle" + str(i)), 200)
         self.ScanningBottomNode.y = 600
         g_messageArea.calcTextPositions(self.TextElements, "CDF1C8", "FFFFFF")
-    
+
     def onFrame(self):
         global LastMovementTime
         LastMovementTime = time.time()
         if (self.Phase == self.START):
             if (self.bRotateAussen):
-                node = g_player.getElementByID("warten_aussen") 
+                node = g_player.getElementByID("warten_aussen")
                 node.angle += 0.13
                 g_topRotator.rotateAussenIdle()
-                if (abs(node.angle) < 0.3): 
+                if (abs(node.angle) < 0.3):
                     node.angle = 0
                     self.bRotateAussen = 0
             if (self.bRotateInnen):
-                node = g_player.getElementByID("warten_innen") 
+                node = g_player.getElementByID("warten_innen")
                 node.angle -= 0.07
                 g_topRotator.rotateInnenIdle()
                 if (abs(node.angle) < 0.2):
@@ -799,23 +863,23 @@ class HandscanMover:
             if (not self.bRotateInnen and not self.bRotateAussen):
                 avg.fadeOut(g_player.getElementByID("warten"), 400)
                 node = g_player.getElementByID("line1")
-                node.text="scanning"
-                node.weight="bold"
+                node.text = "scanning"
+                node.weight = "bold"
                 avg.fadeIn(node, 1000, 1.0)
-                g_player.getElementByID("line1").font="Eurostile"
+                g_player.getElementByID("line1").font = "Eurostile"
                 avg.fadeIn(g_player.getElementByID("balken_ueberschriften"), 300, 1.0)
                 self.Phase = self.SCANNING
-        elif (self.Phase == self.SCANNING):    
+        elif (self.Phase == self.SCANNING):
             self.ScanFrames += 1
-            if (self.ScanFrames > 72 and self.ScanFrames%6 == 0): 
-                g_player.getElementByID("hand"+str(self.CurHand)).opacity=0.0
-                self.CurHand = int(math.floor(random.random()*15))
-                g_player.getElementByID("hand"+str(self.CurHand)).opacity=1.0
+            if (self.ScanFrames > 72 and self.ScanFrames % 6 == 0):
+                g_player.getElementByID("hand" + str(self.CurHand)).opacity = 0.0
+                self.CurHand = int(math.floor(random.random() * 15))
+                g_player.getElementByID("hand" + str(self.CurHand)).opacity = 1.0
 
-            if (self.ScanFrames%8 == 0 and self.ScanFrames > 15): 
+            if (self.ScanFrames % 8 == 0 and self.ScanFrames > 15):
                 g_messageArea.showNextLine()
             if (self.ScanFrames == 1):
-                g_player.getElementByID("start_scan_aufblitzen").opacity=1.0
+                g_player.getElementByID("start_scan_aufblitzen").opacity = 1.0
                 playSound("bioscan.wav")
                 #self.__bioscanSound.play()
                 avg.fadeIn(g_player.getElementByID("scanning_bottom"), 200, 1.0)
@@ -826,7 +890,7 @@ class HandscanMover:
             elif (self.ScanFrames == 6):
                 avg.fadeOut(g_player.getElementByID("start_scan_aufblitzen"), 100)
                 node = g_player.getElementByID("handscanvideo")
-                node.opacity=1.0
+                node.opacity = 1.0
                 node.play()
             elif (self.ScanFrames == 72):
                 node = g_player.getElementByID("handscanvideo")
@@ -834,21 +898,21 @@ class HandscanMover:
                 avg.fadeOut(g_player.getElementByID("handscanvideo"), 600)
             elif (self.ScanFrames == 240):
                 changeMover(KoerperscanMover())
-#                if (random.random() > 0.2): 
+#                if (random.random() > 0.2):
 #                    changeMover(KoerperscanMover())
 #                else:
 #                    changeMover(HandscanErkanntMover())
-            self.ScanningBottomNode.y -= 2.5 
-    
+            self.ScanningBottomNode.y -= 2.5
+
     def onStop(self, NewMover):
         def setLine1Font():
-            g_player.getElementByID("line1").font="Arial"
-        g_player.getElementByID("hand"+str(self.CurHand)).opacity=0.0
+            g_player.getElementByID("line1").font = "Arial"
+        g_player.getElementByID("hand"+str(self.CurHand)).opacity = 0.0
         node = g_player.getElementByID("handscanvideo")
         node.stop()
         node.opacity = 0
         avg.fadeOut(g_player.getElementByID("line1"), 300)
-        g_player.setTimeout(300, setLine1Font) 
+        g_player.setTimeout(300, setLine1Font)
         avg.fadeOut(g_player.getElementByID("balken_ueberschriften"), 300)
         avg.fadeOut(g_player.getElementByID("warten"), 300)
         g_player.getElementByID("scanning_bottom").opacity=0
@@ -859,8 +923,8 @@ class HandscanMover:
         g_player.getElementByID("start_scan_aufblitzen").opacity = 0
         g_player.getElementByID("balken_ueberschriften").opacity = 0
 
-   
-class HandscanErkanntMover: 
+
+class HandscanErkanntMover:
     def __init__(self):
         global g_status
         g_status = HANDSCAN_ERKANNT
@@ -876,9 +940,9 @@ class HandscanErkanntMover:
                 changeMover(UnbenutztMover())
         avg.fadeIn(g_player.getElementByID("willkommen_text"), 500, 1)
         avg.fadeIn(g_player.getElementByID("green_screen"), 500, 1)
-        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "x", 
+        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "x",
                 1000, 607, 73, 0, None)
-        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "y", 
+        avg.LinearAnim(g_player.getElementByID("willkommen_text"), "y",
                 1000, 675, 81, 0, None)
         avg.LinearAnim(g_player.getElementByID("willkommen_text"), "width",
                 1000, 330, 874, 0, None)
@@ -886,9 +950,9 @@ class HandscanErkanntMover:
                 1000, 13, 37, 0, None)
         avg.fadeIn(g_player.getElementByID("auflage_gruen"), 500, 1)
         playSound("willkomm.wav")
-        self.StopTimeoutID = g_player.setTimeout(4000, 
+        self.StopTimeoutID = g_player.setTimeout(4000,
                 newMover)
-    
+
     def onFrame(self):
         global LastMovementTime
         LastMovementTime = time.time()
@@ -908,7 +972,7 @@ class HandscanAbgebrochenMover:
 
     def onStart(self):
         self.TextElements = [
-                TextElement("vorgang abgebrochen", "", "", # warn_icon
+                TextElement("vorgang abgebrochen", "", "",  # warn_icon
                     [ "Extremität zu früh entfernt",
                       "> Alpha-Helix nicht ercannt",
                       "> Unbecannte Macht",
@@ -921,63 +985,65 @@ class HandscanAbgebrochenMover:
         self.CurFrame = 0
         self.WartenNode = g_player.getElementByID("warten")
         g_messageArea.calcTextPositions(self.TextElements, "F69679", "FA3C09")
-        playSound("Beep2.wav")  
+        playSound("Beep2.wav")
         self.WartenNode.opacity = 1
         self.WartenNode.x = 178
         self.WartenNode.y = 241
         g_player.getElementByID("idle").opacity = 1
         g_player.getElementByID("auflage_background").opacity = 1
 
-    def onFrame(self): 
+    def onFrame(self):
         global LastMovementTime
         LastMovementTime = time.time()
-        if self.CurFrame%6 == 0:
+        if self.CurFrame % 6 == 0:
             g_messageArea.showNextLine()
         if self.CurFrame == 150:
             changeMover(UnbenutztMover())
         self.CurFrame += 1
 
-    def onStop(self, NewMover): 
+    def onStop(self, NewMover):
         g_messageArea.clear()
 
 class KoerperscanMover:
     def __startVideo(self):
         Node = g_player.getElementByID("koerperscan")
-        Node.opacity=1
+        Node.opacity = 1
         Node.play()
+
     def __stopVideo(self):
         Node = g_player.getElementByID("koerperscan")
-        Node.opacity=0
+        Node.opacity = 0
         Node.stop()
+
     def __init__(self):
         global g_status
         g_status = KOERPERSCAN
         self.TextElements = [
             TextElement("grundtonus", "grundtonus", "rahmen_3x5",
-                [ "Topographie",
-                  "> Gliedmaße",
-                  "Topologie",
-                  "Scelettaufbau",
-                  "> Wirbelsäule",
-                  "Organe und Innereien"],
-                  "grundton.wav"),
+                ["Topographie",
+                 "> Gliedmaße",
+                 "Topologie",
+                 "Scelettaufbau",
+                 "> Wirbelsäule",
+                 "Organe und Innereien"],
+                 "grundton.wav"),
             TextElement("zellen", "zellen", "rahmen_5x4",
-                [ "Cerngrundbasisplasma",
-                  "Chromatin",
-                  "Ribosom",
-                  "Endoplasmatisches Reticulum",
-                  "Tunnelproteine"],
-                  "zellen.wav"),
+                ["Cerngrundbasisplasma",
+                 "Chromatin",
+                 "Ribosom",
+                 "Endoplasmatisches Reticulum",
+                 "Tunnelproteine"],
+                 "zellen.wav"),
             TextElement("gehirn", "gehirn", "rahmen_4x4",
-                [ "Thermaler PET scan",
-                  "> Cerebraler Cortex",
-                  "> Occipatalanalyse",
-                  "Intelligenzquotient"],
-                  "bakterie.wav")
+                ["Thermaler PET scan",
+                 "> Cerebraler Cortex",
+                 "> Occipatalanalyse",
+                 "Intelligenzquotient"],
+                 "bakterie.wav")
             ]
         self.CurFrame = 0
 
-    def onStart(self): 
+    def onStart(self):
         g_messageArea.calcTextPositions(self.TextElements, "CDF1C8", "FFFFFF")
         playSound("stehenbl.wav")
         self.__startVideo()
@@ -991,15 +1057,15 @@ class KoerperscanMover:
                 changeMover(FremdkoerperMover())
         global LastMovementTime
         LastMovementTime = time.time()
-        if self.CurFrame%9 == 0:
+        if self.CurFrame % 9 == 0:
             g_messageArea.showNextLine()
         if g_scanner.isScannerConnected():
             if g_scanner.isMovingDown():
                 __done()
-            if self.CurFrame == 20*30:
+            if self.CurFrame == 20 * 30:
                 __done()
         else:
-            if self.CurFrame == 10*30:
+            if self.CurFrame == 10 * 30:
                 __done()
         self.CurFrame += 1
 
@@ -1007,10 +1073,11 @@ class KoerperscanMover:
         print("stop bodyscan")
         self.__stopVideo()
 
+
 class FremdkoerperMover:
     def __startVideo(self):
         Node = g_player.getElementByID("koerperscan_rueckwaerts")
-        Node.opacity=1
+        Node.opacity = 1
         Node.play()
     def __stopVideo(self):
         Node = g_player.getElementByID("koerperscan_rueckwaerts")
@@ -1023,44 +1090,44 @@ class FremdkoerperMover:
     def onStart(self):
         self.__startVideo()
         playSound("Beep1.wav")
-        g_player.getElementByID("overlay").opacity=0.8
-        WhichFremdkoerper = int(math.floor(random.random()*3))
-        g_logger.trace(g_logger.APP, "Fremdkoerper: "+str(WhichFremdkoerper))
-        self.__Region=g_player.getElementByID("fremdkoerper_region")
-        self.__Text=g_player.getElementByID("fremdkoerper_text")
-        if WhichFremdkoerper==0:
-            self.__Icon=g_player.getElementByID("flugzeug")
-            self.__Region.x=90
-            self.__Region.y=300
-            self.__Text.text="Bitte begeben sie sich in den bereich social engineering."
-            self.__StopFrame=50
-        elif WhichFremdkoerper==1:
-            self.__Icon=g_player.getElementByID("implantat")
-            self.__Region.x=140
-            self.__Region.y=280
-            self.__Text.text="Bionisches Implantat entdeckt."
-            self.__StopFrame=15
+        g_player.getElementByID("overlay").opacity = 0.8
+        WhichFremdkoerper = int(math.floor(random.random() * 3))
+        g_logger.trace(g_logger.APP, "Fremdkoerper: " + str(WhichFremdkoerper))
+        self.__Region = g_player.getElementByID("fremdkoerper_region")
+        self.__Text = g_player.getElementByID("fremdkoerper_text")
+        if WhichFremdkoerper == 0:
+            self.__Icon = g_player.getElementByID("flugzeug")
+            self.__Region.x = 90
+            self.__Region.y = 300
+            self.__Text.text = "Bitte begeben sie sich in den bereich social engineering."
+            self.__StopFrame = 50
+        elif WhichFremdkoerper == 1:
+            self.__Icon = g_player.getElementByID("implantat")
+            self.__Region.x = 140
+            self.__Region.y = 280
+            self.__Text.text = "Bionisches Implantat entdeckt."
+            self.__StopFrame = 15
         else:
-            self.__Icon=g_player.getElementByID("mate")
-            self.__Region.x=90
-            self.__Region.y=300
-            self.__Text.text="Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
-            self.__StopFrame=50
+            self.__Icon = g_player.getElementByID("mate")
+            self.__Region.x = 90
+            self.__Region.y = 300
+            self.__Text.text = "Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
+            self.__StopFrame = 50
 
     def onFrame(self):
         if self.CurFrame == self.__StopFrame:
             self.__stopVideo()
             Node = g_player.getElementByID("fremdkoerper_region")
-            Node.opacity=1
-            Node.x=90
-            Node.y=300
+            Node.opacity = 1
+            Node.x = 90
+            Node.y = 300
             playSound("Beep1.wav")
         if self.CurFrame == 80:
-            g_player.getElementByID("overlay_streifen").opacity=1
-            g_player.getElementByID("achtung").opacity=1
-            self.__Icon.opacity=1
-            g_player.getElementByID("fremdkoerper_titel").opacity=1
-            g_player.getElementByID("fremdkoerper_text").opacity=1
+            g_player.getElementByID("overlay_streifen").opacity = 1
+            g_player.getElementByID("achtung").opacity = 1
+            self.__Icon.opacity = 1
+            g_player.getElementByID("fremdkoerper_titel").opacity = 1
+            g_player.getElementByID("fremdkoerper_text").opacity = 1
         if self.CurFrame == 300:
             if (bMouseDown):
                 changeMover(WeitergehenMover())
@@ -1070,24 +1137,25 @@ class FremdkoerperMover:
 
     def onStop(self, NewMover):
         Node = g_player.getElementByID("koerperscan_rueckwaerts")
-        Node.opacity=0
-        g_player.getElementByID("fremdkoerper_region").opacity=0
-        g_player.getElementByID("overlay").opacity=0
-        g_player.getElementByID("overlay_streifen").opacity=0
-        g_player.getElementByID("achtung").opacity=0
-        self.__Icon.opacity=0
-        g_player.getElementByID("fremdkoerper_titel").opacity=0
-        g_player.getElementByID("fremdkoerper_text").opacity=0
+        Node.opacity = 0
+        g_player.getElementByID("fremdkoerper_region").opacity = 0
+        g_player.getElementByID("overlay").opacity = 0
+        g_player.getElementByID("overlay_streifen").opacity = 0
+        g_player.getElementByID("achtung").opacity = 0
+        self.__Icon.opacity = 0
+        g_player.getElementByID("fremdkoerper_titel").opacity = 0
+        g_player.getElementByID("fremdkoerper_text").opacity = 0
         g_messageArea.clear()
         Node = g_player.getElementByID("koerperscan_rueckwaerts")
         Node.stop()
+
 
 class WeitergehenMover:
     def __init__(self):
         global g_status
         g_status = WEITERGEHEN
         self.TextElements = [
-              TextElement("bitte weitergehen", "", "", [], "") # warn_icon
+              TextElement("bitte weitergehen", "", "", [], "")  # warn_icon
             ]
         self.CurFrame = 0
 
@@ -1099,9 +1167,9 @@ class WeitergehenMover:
         global LastMovementTime
         LastMovementTime = time.time()
         g_bottomRotator.rotateBottom()
-        if self.CurFrame%6 == 0: 
-           g_messageArea.showNextLine()
-        if (self.CurFrame%100 == 0):
+        if self.CurFrame % 6 == 0:
+            g_messageArea.showNextLine()
+        if (self.CurFrame % 100 == 0):
             playSound("weiterge.wav")
         self.CurFrame += 1
 
@@ -1110,19 +1178,21 @@ class WeitergehenMover:
 
 LastMovementTime = time.time()
 
+
 def onFrame():
     if g_currentMover:
         g_currentMover.onFrame()
     else:
         g_logger.trace(g_logger.ERROR, "CurrentMover does not exists!")
     global LastMovementTime
-    if (g_scanner.isUserInRoom() or g_scanner.isUserInFrontOfScanner() or 
+    if (g_scanner.isUserInRoom() or g_scanner.isUserInFrontOfScanner() or
             not(g_scanner.isScannerConnected())):
         LastMovementTime = time.time()
-    if not(g_status == LEER) and time.time()-LastMovementTime > EMPTY_TIMEOUT:
+    if not(g_status == LEER) and time.time() - LastMovementTime > EMPTY_TIMEOUT:
         changeMover(LeerMover())
-    if g_status == LEER and time.time()-LastMovementTime < EMPTY_TIMEOUT:
+    if g_status == LEER and time.time() - LastMovementTime < EMPTY_TIMEOUT:
         changeMover(UnbenutztMover())
+
 
 def onKeyUp(Event):
     global LastMovementTime
@@ -1131,15 +1201,21 @@ def onKeyUp(Event):
         if g_status == LEER:
             changeMover(UnbenutztMover())
 
+
 def onMouseDown(Event):
     global LastMovementTime
     LastMovementTime = time.time()
     global bMouseDown
+
     bMouseDown = 1
     if g_status == LEER:
         changeMover(UnbenutztMover())
     if g_status in [UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG]:
         changeMover(HandscanMover())
+    if Event.pos.x > 766 and Event.pos.y > 1424 and Event.pos.x < 800 and Event.pos.y < 1500:
+    #if Event.pos > (766, 1424)  and Event.pos < (800, 1500):
+        changeMover(InfoMover())
+
 
 def onMouseUp(Event):
     global LastMovementTime
@@ -1149,7 +1225,7 @@ def onMouseUp(Event):
     bMouseDown = 0
     if g_status in [HANDSCAN, KOERPERSCAN]:
         print "MouseUp, HandscanAbgebrochen"
-        rnd = random.randint(1,20) 
+        rnd = random.randint(1, 20)
         if rnd < 16:
             changeMover(HandscanAbgebrochenMover())
         else:
@@ -1158,14 +1234,17 @@ def onMouseUp(Event):
     elif (g_status == WEITERGEHEN):
         changeMover(UnbenutztMover())
 
+
 def signalHandler(signum, frame):
     global LastSignalHandler
     cleanup()
-    g_logger.trace(g_logger.APP, "Terminating on signal "+str(signum))
-    g_player.stop() 
+    g_logger.trace(g_logger.APP, "Terminating on signal " + str(signum))
+    g_player.stop()
+
 
 def cleanup():
     g_scanner.delete()
+
 
 def handle_jsonrpc():
     global bMouseDown
@@ -1212,7 +1291,7 @@ class Cleuse(App):
         g_messageArea = MessageArea()
 
         g_scanner = BodyScanner()
-        g_status = UNBENUTZT 
+        g_status = UNBENUTZT
         g_currentMover = UnbenutztMover()
 
         g_player.showCursor(False)
@@ -1232,20 +1311,20 @@ scheduler = g_player.setInterval(500, handle_jsonrpc)
 
 bDebug = not(os.getenv('CLEUSE_DEPLOY'))
 if (bDebug):
-    #Player.setResolution(0, 512, 0, 0) 
+    #Player.setResolution(0, 512, 0, 0)
     g_logger.setCategories(g_logger.APP |
-                      g_logger.WARNING | 
+                      g_logger.WARNING |
                       g_logger.PROFILE |
 #                      g_logger.PROFILE_LATEFRAMES |
                       g_logger.CONFIG |
 #                      g_logger.MEMORY  |
 #                      g_logger.BLTS    |
                       g_logger.EVENTS)
-    EMPTY_TIMEOUT = 10 
+    EMPTY_TIMEOUT = 10
 else:
     g_logger.setFileDest("/var/log/cleuse.log")
     g_logger.setCategories(g_logger.APP |
-                      g_logger.WARNING | 
+                      g_logger.WARNING |
                       g_logger.PROFILE |
 #                      g_logger.PROFILE_LATEFRAMES |
                       g_logger.CONFIG |
@@ -1253,8 +1332,8 @@ else:
 #                      g_logger.BLTS    |
                       g_logger.EVENTS)
     # Time without movement until we blank the screen & dim the lights.
-    EMPTY_TIMEOUT = 60*5
+    EMPTY_TIMEOUT = 60 * 5
 
 
-Cleuse.start(resolution=(1024, 2*768), debugWindowSize=(512, 768))
+Cleuse.start(resolution=(1024, 2*768), debugWindowSize = (512, 768))
 cleanup()
