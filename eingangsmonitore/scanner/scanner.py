@@ -736,7 +736,6 @@ class InfoMover:
         self.MESSAGE = 1
         self.Phase = self.START
         self.ScanFrames = 0
-        self.ScanningBottomNode = g_player.getElementByID("scanning_bottom")
 
     def onStart(self):
         warten = g_player.getElementByID("warten")
@@ -744,7 +743,6 @@ class InfoMover:
         avg.LinearAnim(warten, "y", 600, 241, 10, 0, None)
         for i in range(12):
             avg.fadeOut(g_player.getElementByID("idle"+str(i)), 200)
-        self.ScanningBottomNode.y = 600
 
     def onFrame(self):
         global LastMovementTime
@@ -772,9 +770,8 @@ class InfoMover:
         elif (self.Phase == self.MESSAGE):
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
-                playSound("tos-computer-06.wav")
+                playSound("tos-computer-03.wav")
                 CurTextNode = g_player.getElementByID("loginMessage1")
-                avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
                 text = getEventMessage()
                 text = text + getWhoMessage()
                 CurTextNode.text = text
@@ -784,9 +781,8 @@ class InfoMover:
                 changeMover(UnbenutztMover())
 
     def onStop(self, NewMover):
+        pass
         #avg.fadeOut(g_player.getElementByID("loginMessage1"), 300)
-        avg.fadeOut(g_player.getElementByID("auflage_gruen_login"), 300)
-        avg.fadeOut(g_player.getElementByID("auflage_rot"), 300)
 
 class HandscanMover:
     def __init__(self):
