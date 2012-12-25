@@ -1201,7 +1201,7 @@ def onMouseDown(Event):
         changeMover(UnbenutztMover())
     if g_status in [UNBENUTZT, UNBENUTZT_AUFFORDERUNG, AUFFORDERUNG]:
         changeMover(HandscanMover())
-    if Event.pos.x > 766 and Event.pos.y > 1424 and Event.pos.x < 800 and Event.pos.y < 1500:
+    if Event.pos.x > 1000 and Event.pos.y > 1500 and Event.pos.x < 1100 and Event.pos.y < 1600:
     #if Event.pos > (766, 1424)  and Event.pos < (800, 1500):
         changeMover(InfoMover())
 
