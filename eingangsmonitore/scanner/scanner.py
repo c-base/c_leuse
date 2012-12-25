@@ -540,8 +540,8 @@ class UnbenutztMover:
             #eta = cbeamdata['eta']
             CurTextNode.text = text
             CurTextNode.opacity = 1.0
-            if random.randint(0,100) > 98:
-                changeMover(VirusMover())
+            #if random.randint(0,1000000) > 99999998:
+                #changeMover(VirusMover())
 
         #g_topRotator.rotateTopIdle()
         g_bottomRotator.rotateBottom()
