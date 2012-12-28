@@ -697,9 +697,9 @@ class LoginMover:
                 if self.action == 'login':
                     playSound("tos-computer-06.wav")
                 elif self.action == 'logout':
-                    playSound("tos-computer-01.wav")
-                else:
                     playSound("tng-doorbell.wav")
+                else:
+                    playSound("tos-computer-01.wav")
 
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
