@@ -694,7 +694,13 @@ class LoginMover:
         elif (self.Phase == self.MESSAGE):
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
-                playSound("tos-computer-06.wav")
+                if self.action == 'login':
+                    playSound("tos-computer-06.wav")
+                elif self.action == 'logout':
+                    playSound("tos-computer-01.wav")
+                else:
+                    playSound("tng-doorbell.wav")
+
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
                     avg.fadeIn(g_player.getElementByID("auflage_gruen_login"), 200, 1.0)
