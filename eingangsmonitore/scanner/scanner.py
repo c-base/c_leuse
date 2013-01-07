@@ -726,7 +726,8 @@ class LoginMover:
                     #except: pass
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
-                cbeam.set_stripe_pattern(1)
+                #cbeam.set_stripe_pattern(1)
+                cbeam.set_stripe_default()
             #self.ScanningBottomNode.y -= 2.5
 
     def onStop(self, NewMover):
