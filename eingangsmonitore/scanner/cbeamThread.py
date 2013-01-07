@@ -12,12 +12,16 @@ class cbeamThread ( threading.Thread ):
 
     def run (self):
         while True:
-            tmp = self.cbeam.who()['result']
-            events = self.cbeam.events()['result']
-            tmp['events'] = events
-            self.cbeamdata = tmp
+            try:
+                tmp = self.cbeam.who()['result']
+                events = self.cbeam.events()['result']
+                tmp['events'] = events
+                self.cbeamdata = tmp
+            except:
+                pass
             sleep(10)
             print "c-beam data updated."
+
     def getcbeamdata(self):
         print self.cbeamdata
         return self.cbeamdata
