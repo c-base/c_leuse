@@ -16,6 +16,7 @@ import time
 
 import MonitorJSONRPC
 import jsonrpclib
+from jsonrpc.proxy import ServiceProxy
 import cbeamThread
 import datetime
 
@@ -26,10 +27,11 @@ except:
 
 g_player = avg.Player.get()
 g_logger = avg.Logger.get()
-cbeam = jsonrpclib.Server('http://10.0.1.27:4254/rpc/')
+cbeam = ServiceProxy('http://10.0.1.27:4254/rpc/')
 cout = jsonrpclib.Server('http://10.0.1.27:1775')
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
+
 cbeamthread = cbeamThread.cbeamThread('http://10.0.1.27:4254/rpc/')
 cbeamthread.setDaemon(True)
 cbeamthread.start()
@@ -729,9 +731,11 @@ class LoginMover:
                     #except: pass
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
-                #cbeam.set_stripe_pattern(1)
                 try:
+                    #print "set_stripe_default"
+                    #print cbeam.set_stripe_default()
                     cbeam.set_stripe_default()
+                    #cbeam.set_stripe_pattern(1)
                 except:
                     pass
             #self.ScanningBottomNode.y -= 2.5
