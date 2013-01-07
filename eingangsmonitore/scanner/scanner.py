@@ -694,15 +694,18 @@ class LoginMover:
         elif (self.Phase == self.MESSAGE):
             self.ScanFrames += 1
             if (self.ScanFrames == 1):
-                if self.action == 'login':
-                    playSound("tos-computer-06.wav")
-                    cbeam.set_stripe_pattern(2)
-                elif self.action == 'logout':
-                    playSound("tng-doorbell.wav")
-                    cbeam.set_stripe_pattern(2)
-                else:
-                    playSound("tos-computer-01.wav")
-                    cbeam.set_stripe_pattern(4)
+                try:
+                    if self.action == 'login':
+                        playSound("tos-computer-06.wav")
+                        cbeam.set_stripe_pattern(2)
+                    elif self.action == 'logout':
+                        playSound("tng-doorbell.wav")
+                        cbeam.set_stripe_pattern(2)
+                    else:
+                        playSound("tos-computer-01.wav")
+                        cbeam.set_stripe_pattern(4)
+                except:
+                    pass
 
                 CurTextNode = g_player.getElementByID("loginMessage1")
                 if self.action == "login":
@@ -727,7 +730,10 @@ class LoginMover:
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
                 #cbeam.set_stripe_pattern(1)
-                cbeam.set_stripe_default()
+                try:
+                    cbeam.set_stripe_default()
+                except:
+                    pass
             #self.ScanningBottomNode.y -= 2.5
 
     def onStop(self, NewMover):
