@@ -527,6 +527,10 @@ class UnbenutztMover:
                     lambda : changeMover(Unbenutzt_AufforderungMover()))
         g_bottomRotator.CurIdleTriangle=0
         g_bottomRotator.TrianglePhase=0
+        try:
+            cbeam.set_stripe_default()
+        except:
+            pass
 
 
     def onFrame(self):
@@ -851,6 +855,10 @@ class HandscanMover:
             avg.fadeOut(g_player.getElementByID("idle" + str(i)), 200)
         self.ScanningBottomNode.y = 600
         g_messageArea.calcTextPositions(self.TextElements, "CDF1C8", "FFFFFF")
+        try:
+            cbeam.set_stripe_pattern(6)
+        except:
+            pass
 
     def onFrame(self):
         global LastMovementTime
@@ -956,6 +964,10 @@ class HandscanErkanntMover:
                 1000, 13, 37, 0, None)
         avg.fadeIn(g_player.getElementByID("auflage_gruen"), 500, 1)
         playSound("willkomm.wav")
+        try:
+            cbeam.set_stripe_pattern(2)
+        except:
+            pass
         self.StopTimeoutID = g_player.setTimeout(4000,
                 newMover)
 
@@ -977,6 +989,11 @@ class HandscanAbgebrochenMover:
         g_messageArea.clear()
 
     def onStart(self):
+        try:
+            cbeam.set_stripe_pattern(4)
+            cbeam.set_stripe_speed(3)
+        except:
+            pass
         self.TextElements = [
                 TextElement("vorgang abgebrochen", "", "",  # warn_icon
                     [ "Extremität zu früh entfernt",
