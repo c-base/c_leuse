@@ -706,10 +706,10 @@ class LoginMover:
                         cbeam.set_stripe_pattern(2)
                     elif self.action == 'logout':
                         playSound("tng-doorbell.wav")
-                        cbeam.set_stripe_pattern(2)
+                        cbeam.set_stripe_pattern(4)
                     else:
                         playSound("tos-computer-01.wav")
-                        cbeam.set_stripe_pattern(4)
+                        cbeam.set_stripe_pattern(5)
                 except:
                     pass
 
@@ -990,7 +990,7 @@ class HandscanAbgebrochenMover:
 
     def onStart(self):
         try:
-            cbeam.set_stripe_pattern(4)
+            cbeam.set_stripe_pattern(5)
             cbeam.set_stripe_speed(3)
         except:
             pass
@@ -1136,6 +1136,10 @@ class FremdkoerperMover:
             self.__Region.y = 300
             self.__Text.text = "Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
             self.__StopFrame = 50
+        try:
+            cbeam.set_stripe_pattern(4)
+        except:
+            pass
 
     def onFrame(self):
         if self.CurFrame == self.__StopFrame:
