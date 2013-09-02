@@ -340,6 +340,8 @@ class MonitorMain(DivNode):
         self.bottom = ContentViewer(parent=self.bottomDiv)
         self._cwars = CWars(opacity=0, parent=self.bottom)
         self.bottom.addContent(self._cwars)
+        print "running MonitorMain"
+        g_log.trace(g_log.ERROR, "running monitormain now")
         self.bottom.nextContent()
 
     def login(self, user):
