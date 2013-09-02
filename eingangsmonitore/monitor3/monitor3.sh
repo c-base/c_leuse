@@ -5,6 +5,7 @@ export AVG_DEPLOY=1
 
 xset -dpms
 xrandr --output CRT2 --off
+xhost +local:
 
 echo "foo"
 
