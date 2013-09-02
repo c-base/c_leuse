@@ -535,7 +535,7 @@ class UnbenutztMover:
 
     def onFrame(self):
         self.ScanFrames += 1
-        self.TimeNode.text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
+        #self.TimeNode.text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
         if self.ScanFrames % 1000 == 1:
             #getcbeamdata() #TODO
             CurTextNode = g_player.getElementByID("loginMessage1")
