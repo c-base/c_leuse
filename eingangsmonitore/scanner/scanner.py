@@ -27,12 +27,13 @@ except:
 
 g_player = avg.Player.get()
 g_logger = avg.Logger.get()
-cbeam = ServiceProxy('http://10.0.1.27:4254/rpc/')
+cbeam = ServiceProxy('http://10.0.1.17:4254/rpc/')
+cerebrum = ServiceProxy('http://10.0.1.27:7777/')
 cout = jsonrpclib.Server('http://10.0.1.27:1775')
 
 jsonrpcserver, rpcqueue = MonitorJSONRPC.forkServer(port=9090)
 
-cbeamthread = cbeamThread.cbeamThread('http://10.0.1.27:4254/rpc/')
+cbeamthread = cbeamThread.cbeamThread('http://10.0.1.17:4254/rpc/')
 cbeamthread.setDaemon(True)
 cbeamthread.start()
 
@@ -49,9 +50,27 @@ g_status = None
 g_scanner = None
 g_cbeamdata = {}
 
+sounds = {}
+sounds['bitteida.wav'] = avg.SoundNode(href='medien/cound/bitteida.wav', parent=g_player.getRootNode())
+sounds['tos-computer-06.wav'] = avg.SoundNode(href='medien/cound/tos-computer-06.wav', parent=g_player.getRootNode())
+sounds['tng-doorbell.wav'] = avg.SoundNode(href='medien/cound/tng-doorbell.wav', parent=g_player.getRootNode())
+sounds['tos-computer-01.wav'] = avg.SoundNode(href='medien/cound/tos-computer-01.wav', parent=g_player.getRootNode())
+sounds['tos-computer-03.wav'] = avg.SoundNode(href='medien/cound/', parent=g_player.getRootNode())
+sounds['bioscan.wav'] = avg.SoundNode(href='medien/cound/bioscan.wav', parent=g_player.getRootNode())
+sounds['willkomm.wav'] = avg.SoundNode(href='medien/cound/willkomm.wav', parent=g_player.getRootNode())
+sounds['Beep1.wav'] = avg.SoundNode(href='medien/cound/Beep1.wav', parent=g_player.getRootNode())
+sounds['Beep2.wav'] = avg.SoundNode(href='medien/cound/Beep2.wav', parent=g_player.getRootNode())
+sounds['stehenbl.wav'] = avg.SoundNode(href='medien/cound/stehenbl.wav', parent=g_player.getRootNode())
+sounds['weiterge.wav'] = avg.SoundNode(href='medien/cound/weiterge.wav', parent=g_player.getRootNode())
+sounds['grundton.wav'] = avg.SoundNode(href='medien/cound/grundton.wav', parent=g_player.getRootNode())
+sounds['zellen.wav'] = avg.SoundNode(href='medien/cound/zellen.wav', parent=g_player.getRootNode())
+sounds['handscan.wav'] = avg.SoundNode(href='medien/cound/handscan.wav', parent=g_player.getRootNode())
+
 def playSound(Filename):
     node = avg.SoundNode(href='medien/cound/%s' % Filename, parent=g_player.getRootNode())
     node.play()
+    print Filename
+    #sounds[Filename].play()
 
 def getcbeamdata():
     return cbeamthread.getcbeamdata()
@@ -528,7 +547,7 @@ class UnbenutztMover:
         g_bottomRotator.CurIdleTriangle=0
         g_bottomRotator.TrianglePhase=0
         try:
-            cbeam.set_stripe_default()
+            cerebrum.set_default_pattern()
         except:
             pass
 
@@ -703,13 +722,13 @@ class LoginMover:
                 try:
                     if self.action == 'login':
                         playSound("tos-computer-06.wav")
-                        cbeam.set_stripe_pattern(2)
+                        cerebrum.set_pattern(2)
                     elif self.action == 'logout':
                         playSound("tng-doorbell.wav")
-                        cbeam.set_stripe_pattern(4)
+                        cerebrum.set_pattern(4)
                     else:
                         playSound("tos-computer-01.wav")
-                        cbeam.set_stripe_pattern(5)
+                        cerebrum.set_pattern(5)
                 except:
                     pass
 
@@ -736,9 +755,9 @@ class LoginMover:
             elif (self.ScanFrames == 720):
                 changeMover(UnbenutztMover())
                 try:
-                    #print "set_stripe_default"
+                    #print "set_tripe_default"
                     #print cbeam.set_stripe_default()
-                    cbeam.set_stripe_default()
+                    cerebrum.set_default_pattern()
                     #cbeam.set_stripe_pattern(1)
                 except:
                     pass
@@ -856,7 +875,7 @@ class HandscanMover:
         self.ScanningBottomNode.y = 600
         g_messageArea.calcTextPositions(self.TextElements, "CDF1C8", "FFFFFF")
         try:
-            cbeam.set_stripe_pattern(6)
+            cerebrum.set_pattern(6)
         except:
             pass
 
@@ -965,7 +984,7 @@ class HandscanErkanntMover:
         avg.fadeIn(g_player.getElementByID("auflage_gruen"), 500, 1)
         playSound("willkomm.wav")
         try:
-            cbeam.set_stripe_pattern(2)
+            cerebrum.set_pattern(2)
         except:
             pass
         self.StopTimeoutID = g_player.setTimeout(4000,
@@ -990,8 +1009,8 @@ class HandscanAbgebrochenMover:
 
     def onStart(self):
         try:
-            cbeam.set_stripe_pattern(5)
-            cbeam.set_stripe_speed(3)
+            cerebrum.set_pattern(5)
+            cerebrum.set_speed(3)
         except:
             pass
         self.TextElements = [
@@ -1137,7 +1156,7 @@ class FremdkoerperMover:
             self.__Text.text = "Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
             self.__StopFrame = 50
         try:
-            cbeam.set_stripe_pattern(4)
+            cerebrum.set_pattern(4)
         except:
             pass
 
