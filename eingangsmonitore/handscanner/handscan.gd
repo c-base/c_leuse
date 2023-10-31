@@ -4,13 +4,16 @@ const TOPIC_USER_WHO = "user/who"
 const TOPIC_BOARDING = "user/boarding"
 const TOPIC_LEAVING = "user/leaving"
 const TOPIC_TODAYS_EVENTS = "events/today"
-const NO_EVENTS = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen."
+const NO_EVENTS = "Fu:r heute sind leider ceine Events eingetragen, lass dich u:berraschen.\n\n"
 const TODAYS_EVENTS = "Heute an Bord:\n\n%s"
 
-var broker_url = "tcp://10.0.1.17"
-@onready var pfeil = $pfeil
-@onready var handscan = $handscan
+const fremdkoerper_flugzeug = "Bitte begeben sie sich in den bereich social engineering."
+const fremdkoerper_implantat = "Bionisches Implantat entdeckt."
+const fremdkoerper_mate = "Glashaltiges Gebilde im Magen. Bitte begeben sie sich umgehend zur Biowaffenentsorgungsstation auf Ebene 5b."
 
+var broker_url = "tcp://10.0.1.17"
+@onready var pfeil = $bottom/pfeil
+@onready var handscan = $top/handscan
 @onready var handscan_sounds = [$sounds/bioscan, $sounds/handscan, $sounds/grundtonus, $sounds/zellen, $sounds/bakterien, $sounds/success]
 
 var pfeile = []
@@ -27,14 +30,14 @@ func _ready():
 	for n in 12:
 		var pfeil_clone = pfeil.duplicate()
 		pfeil_clone.rotate(deg_to_rad(n*360/12))
-		add_child(pfeil_clone)
+		$bottom.add_child(pfeil_clone)
 		pfeile.append(pfeil_clone)
 	pfeil.queue_free()
 	handscan.hide()
 	display_events()
 	_on_timer_timeout()
 	$MQTT.client_id = "handscanner"
-	$MQTT.verbose_level = 0
+	# $MQTT.verbose_level = 0
 	$MQTT.connect_to_broker(broker_url)
 
 func _on_timer_timeout():
@@ -48,14 +51,14 @@ func start_handscan():
 	if handscan_state != "ready":
 		return
 	handscan_state = "scanning"
-	$scanning.show()
+	$top/scanning.show()
 	scan_finished = false
-	$MainText.hide()
-	$HandPulse.show()
-	$HandPulse.play()
-	$AuflageLila.show()
-	$scanbalken_left.play()
-	$scanbalken_right.play()
+	$top/MainText.hide()
+	$top/HandPulse.show()
+	$top/HandPulse.play()
+	$bottom/AuflageLila.show()
+	$bottom/scanbalken_left.play()
+	$bottom/scanbalken_right.play()
 	$sounds/bioscan.play()
 	for n in 12:
 		pfeile[n].hide()
@@ -67,31 +70,35 @@ func stop_handscan():
 	if not scan_finished:
 		cleanup()
 		$sounds/beep_abort.play()
-		$AuflageRot.show()
+		$bottom/AuflageRot.show()
+		$top/vorgang_abgebrochen.show()
 		handscan_state = "aborted"
 		
 func cleanup():
 	stop_handscan_sounds()
-	$AuflageLila.hide()
-	$AuflageGruen.hide()
-	$AuflageRot.hide()
-	$AuflageGruenLogin.hide()
-	$GreenScreen.hide()
-	$HandPulse.stop()
-	$koerperscan.stop()
-	$koerperscan.hide() 
+	$bottom/AuflageLila.hide()
+	$bottom/AuflageGruen.hide()
+	$bottom/AuflageRot.hide()
+	$top/vorgang_abgebrochen.hide()
+	$bottom/AuflageGruenLogin.hide()
+	$top/GreenScreen.hide()
+	$top/HandPulse.stop()
+	$top/koerperscan.stop()
+	$top/koerperscan.hide()
+	$top/fremdkoerper.hide()
+	$top/Bodyscan.hide()
 	handscan.hide()
 	handscan.stop()
-	$scanning.hide()
-	$scanbalken_left.stop()
-	$scanbalken_right.stop()
+	$top/scanning.hide()
+	$bottom/scanbalken_left.stop()
+	$bottom/scanbalken_right.stop()
 	display_events()
-	$MainText.show()
+	$top/MainText.show()
 	scan_part1(0.0, 0.0)
 	scan_part2(0.0, 0.0)
 
 func display_events():
-	$MainText.text = event_message
+	$top/MainText.text = event_message + get_motivation_message()
 
 func stop_handscan_sounds():
 	for sound in handscan_sounds:
@@ -112,34 +119,53 @@ func _on_control_gui_input(event):
 func _on_scanbalken_finished():
 	handscan.stop()
 	handscan.hide()
-	$koerperscan.stop()
-	$koerperscan.hide()
+	$top/koerperscan.stop()
+	$top/koerperscan.hide()
+	$top/scanning.hide()
+	scan_part2(0.0, 0.0)
 	var rng = RandomNumberGenerator.new()
-	var result = rng.randi_range(0, 3)
-	if result == 0:
-		$AuflageLila.hide()
-		$AuflageGruen.show()
-		$GreenScreen.show()
+	var result = rng.randi_range(0, 4)
+	if result < 2:
+		$bottom/AuflageLila.hide()
+		$bottom/AuflageGruen.show()
+		$top/GreenScreen.show()
 		$sounds/willkommen.play()
 		handscan_state = "success"
 	else:
+		if result == 2:
+			$top/fremdkoerper/text.text = fremdkoerper_flugzeug
+			$top/fremdkoerper/IconFlugzeug.show()
+			$top/fremdkoerper/IconImplantat.hide()
+			$top/fremdkoerper/IconMate.hide()
+		elif result == 3:
+			$top/fremdkoerper/text.text = fremdkoerper_implantat
+			$top/fremdkoerper/IconFlugzeug.hide()
+			$top/fremdkoerper/IconImplantat.show()
+			$top/fremdkoerper/IconMate.hide()
+		elif result == 4:
+			$top/fremdkoerper/text.text = fremdkoerper_mate
+			$top/fremdkoerper/IconFlugzeug.hide()
+			$top/fremdkoerper/IconImplantat.hide()
+			$top/fremdkoerper/IconMate.show()
+		$top/fremdkoerper.show()
+		$top/Bodyscan.show()
 		$sounds/failure.play()
-		$AuflageLila.hide()
-		$AuflageRot.show()
+		$bottom/AuflageLila.hide()
+		$bottom/AuflageRot.show()
 		handscan_state = "failure"
 	scan_finished = true
 
 func _on_bioscan_finished():
-	$HandPulse.hide()
-	$HandPulse.stop()
+	$top/HandPulse.hide()
+	$top/HandPulse.stop()
 	handscan.show()
 	handscan.play()
 	$sounds/handscan.play()
 	
 func _on_handscan_sound_finished():
 	$sounds/bitte_stehenbleiben.play()
-	$koerperscan.show()
-	$koerperscan.play()
+	$top/koerperscan.show()
+	$top/koerperscan.play()
 	scan_part1(0.0, 0.0)
 	scan_part2(1.0, 0.2)
 
@@ -164,78 +190,8 @@ func _on_nicht_identifiziert_finished():
 func _on_willkommen_finished():
 	reset()
 
-func scan_part1(alpha, delay):
-	if scan_tween_1:
-		scan_tween_1.kill()
-	scan_tween_1 = get_tree().create_tween()
-	scan_tween_1.tween_property($moleculare_structur/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($moleculare_structur/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($moleculare_structur/Panel2/Molekuel, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/Panel2/Helix, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/Panel2/Welt, "modulate", Color(1, 1, 1, alpha), delay)
-	
-	scan_tween_1.tween_property($moleculare_structur/title, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($moleculare_structur/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($moleculare_structur/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($moleculare_structur/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($moleculare_structur/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
-
-	scan_tween_1.tween_property($genetische_transcription/title, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($genetische_transcription/zeile6, "modulate", Color(1, 1, 1, alpha), delay)
-
-	scan_tween_1.tween_property($lebensform_hercunft/title, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_1.tween_property($lebensform_hercunft/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
-	
-func scan_part2(alpha, delay):
-	if scan_tween_2:
-		scan_tween_2.kill()
-	scan_tween_2 = get_tree().create_tween()
-	scan_tween_2.tween_property($grundtonus/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/Panel2/Grundtonus, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/Panel2/Zellen, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/Panel2/Gehirn, "modulate", Color(1, 1, 1, alpha), delay)
-	
-	scan_tween_2.tween_property($grundtonus/title, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($grundtonus/zeile6, "modulate", Color(1, 1, 1, alpha), delay)
-
-	scan_tween_2.tween_property($zellen/title, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($zellen/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
-
-	scan_tween_2.tween_property($gehirn/title, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
-	scan_tween_2.tween_property($gehirn/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
-
 func _on_failure_finished():
-	await get_tree().create_timer(2).timeout
+	await get_tree().create_timer(5).timeout
 	reset()
 
 func reset():
@@ -244,7 +200,9 @@ func reset():
 		pfeile[n].show()
 	handscan_state = "ready"
 
-
+func get_motivation_message():
+	return "We are excellent to each other!\n\n"
+	
 func _on_mqtt_received_message(topic, message):
 	var json = JSON.new()
 	json.parse(message)
@@ -264,7 +222,10 @@ func _on_mqtt_received_message(topic, message):
 	if topic == TOPIC_LEAVING:
 		leaving_message(json.data)
 	if topic == TOPIC_TODAYS_EVENTS:
-		event_message = TODAYS_EVENTS % "\n".join(json.data)
+		if len(json.data) > 0:
+			event_message = TODAYS_EVENTS % "\n".join(json.data)
+		else:
+			event_message = NO_EVENTS
 		display_events()
 
 func boarding_message(user):
@@ -272,17 +233,17 @@ func boarding_message(user):
 	# 	await get_tree().create_timer(2).timeout
 	# 	return boarding_message(user)
 	$sounds/login.play()
-	$AuflageGruenLogin.show()
+	$bottom/AuflageGruenLogin.show()
 	message("Hallo " + user + ", willcommen auf der c-base!\n\n" + event_message + "\n\n" + who_message)
 
 func leaving_message(data):
 	$sounds/logout.play()
-	$AuflageGruenLogin.show()
+	$bottom/AuflageGruenLogin.show()
 	var ceitloch = 4254
 	message("Guten Heimflug %s!\n\nDu warst dieses mal fu:r %d secunden im ceitloch. dabei hast du circa %d Liter Sauerstoff umgesetzt und ungefa:hr %d mal geblinzelt." % [data['user'], ceitloch, ceitloch * 0.4, ceitloch / 5])
 
 func message(msg, duration=10):
-	$MainText.text = msg
+	$top/MainText.text = msg
 	for n in 12:
 		pfeile[n].hide()
 	$ResetTimer.start(duration)
@@ -293,3 +254,73 @@ func _on_mqtt_broker_connected():
 
 func _on_reset_timer_timeout():
 	reset()
+
+func scan_part1(alpha, delay):
+	if scan_tween_1:
+		scan_tween_1.kill()
+	scan_tween_1 = get_tree().create_tween()
+	scan_tween_1.tween_property($top/moleculare_structur/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/moleculare_structur/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/moleculare_structur/Panel2/Molekuel, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/Panel2/Helix, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/Panel2/Welt, "modulate", Color(1, 1, 1, alpha), delay)
+	
+	scan_tween_1.tween_property($top/moleculare_structur/title, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/moleculare_structur/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/moleculare_structur/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/moleculare_structur/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/moleculare_structur/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
+
+	scan_tween_1.tween_property($top/genetische_transcription/title, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/genetische_transcription/zeile6, "modulate", Color(1, 1, 1, alpha), delay)
+
+	scan_tween_1.tween_property($top/lebensform_hercunft/title, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_1.tween_property($top/lebensform_hercunft/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
+	
+func scan_part2(alpha, delay):
+	if scan_tween_2:
+		scan_tween_2.kill()
+	scan_tween_2 = get_tree().create_tween()
+	scan_tween_2.tween_property($top/grundtonus/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/Panel1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/Panel2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/Panel2/Grundtonus, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/Panel2/Zellen, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/Panel2/Gehirn, "modulate", Color(1, 1, 1, alpha), delay)
+	
+	scan_tween_2.tween_property($top/grundtonus/title, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/grundtonus/zeile6, "modulate", Color(1, 1, 1, alpha), delay)
+
+	scan_tween_2.tween_property($top/zellen/title, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/zeile4, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/zellen/zeile5, "modulate", Color(1, 1, 1, alpha), delay)
+
+	scan_tween_2.tween_property($top/gehirn/title, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/zeile1, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/zeile2, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/zeile3, "modulate", Color(1, 1, 1, alpha), delay)
+	scan_tween_2.tween_property($top/gehirn/zeile4, "modulate", Color(1, 1, 1, alpha), delay)

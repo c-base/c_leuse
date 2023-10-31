@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://cngerl1pyfvg3"]
+[gd_scene load_steps=47 format=3 uid="uid://cngerl1pyfvg3"]
 
 [ext_resource type="Texture2D" uid="uid://cc5fjlsrshveu" path="res://assets/screen_background.png" id="1_bpycg"]
 [ext_resource type="Script" path="res://handscan.gd" id="1_fsvwi"]
@@ -23,6 +23,8 @@
 [ext_resource type="AudioStream" uid="uid://bbe6b0oalu5r4" path="res://assets/cound/Beep1.wav" id="16_eb3tw"]
 [ext_resource type="AudioStream" uid="uid://cbwmjg828g6lf" path="res://assets/cound/Beep2.wav" id="16_f5u0o"]
 [ext_resource type="AudioStream" uid="uid://tq4n7gn6hwwp" path="res://assets/cound/nichtide.wav" id="18_rb8c1"]
+[ext_resource type="Texture2D" uid="uid://dsdktl5hd6xrx" path="res://assets/10_fremdkoerper/bodyscan.png" id="19_6rneq"]
+[ext_resource type="Texture2D" uid="uid://cguf6qur1t2d" path="res://assets/10_fremdkoerper/region.png" id="20_gc6ln"]
 [ext_resource type="VideoStream" path="res://assets/07_koerperscan/bodyscan.ogv" id="21_pr2td"]
 [ext_resource type="Texture2D" uid="uid://qi0llrwnnyxg" path="res://assets/03_handscan/molekuel.png" id="22_6r3pq"]
 [ext_resource type="AudioStream" uid="uid://bap2plfxab2by" path="res://assets/cound/ok.wav" id="22_ahhkt"]
@@ -34,11 +36,12 @@
 [ext_resource type="Texture2D" uid="uid://c0lq5kfbi1564" path="res://assets/07_koerperscan/grundtonus.png" id="27_3med6"]
 [ext_resource type="Texture2D" uid="uid://bx3rwdekh8lkd" path="res://assets/07_koerperscan/zellen.png" id="28_5sy7g"]
 [ext_resource type="Texture2D" uid="uid://c7ixsy3r1gfc1" path="res://assets/07_koerperscan/gehirn.png" id="29_04obm"]
+[ext_resource type="Texture2D" uid="uid://csi75oca0gcak" path="res://assets/10_fremdkoerper/achtung.png" id="29_vewli"]
+[ext_resource type="Texture2D" uid="uid://boixm4bx1gxdc" path="res://assets/10_fremdkoerper/icon_flugzeug.png" id="30_kynu0"]
+[ext_resource type="Texture2D" uid="uid://bsjiknwhva2g8" path="res://assets/10_fremdkoerper/icon_implantat.png" id="31_4xb48"]
 [ext_resource type="Script" path="res://addons/mqtt/mqtt.gd" id="31_q5j4j"]
+[ext_resource type="Texture2D" uid="uid://5sdmfyx1sg4r" path="res://assets/10_fremdkoerper/icon_mate.png" id="32_ag3mm"]
 [ext_resource type="Texture2D" uid="uid://djcge7fl7sauc" path="res://assets/login/auflage_gruen_login.png" id="35_pom3l"]
-
-[sub_resource type="SystemFont" id="SystemFont_ovfvp"]
-subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfino"]
 bg_color = Color(0.352941, 0.352941, 0, 1)
@@ -63,6 +66,16 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqh43"]
+bg_color = Color(0.976471, 0.760784, 0, 0.517647)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vmnnd"]
+bg_color = Color(1, 0.65098, 0, 1)
+
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -71,103 +84,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fsvwi")
-
-[node name="handscan" type="AnimatedSprite2D" parent="."]
-position = Vector2(279, 374)
-sprite_frames = ExtResource("4_lllsg")
-
-[node name="HandPulse" type="VideoStreamPlayer" parent="."]
-layout_mode = 0
-offset_left = 38.0
-offset_top = 54.0
-offset_right = 518.0
-offset_bottom = 694.0
-stream = ExtResource("3_0csxm")
-
-[node name="koerperscan" type="VideoStreamPlayer" parent="."]
-layout_mode = 0
-offset_left = 515.0
-offset_top = 60.0
-offset_right = 1155.0
-offset_bottom = 540.0
-rotation = 1.5708
-stream = ExtResource("21_pr2td")
-
-[node name="GreenScreen" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(277.875, 378.5)
-scale = Vector2(486.25, 645)
-texture = ExtResource("5_bdp8d")
-
-[node name="AuflageBackground" type="Sprite2D" parent="."]
-position = Vector2(512, 1152)
-texture = ExtResource("1_j8umw")
-
-[node name="ScreenBackground" type="Sprite2D" parent="."]
-position = Vector2(512, 384)
-texture = ExtResource("1_bpycg")
-
-[node name="pfeil" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
-position = Vector2(512, 1140)
-texture = ExtResource("4_7t2kg")
-offset = Vector2(0, -200)
-
-[node name="Pfeil Timer" type="Timer" parent="."]
-wait_time = 2.0
-autostart = true
-
-[node name="scanbalken_left" type="VideoStreamPlayer" parent="."]
-layout_mode = 0
-offset_left = -8.0
-offset_top = 792.0
-offset_right = 302.0
-offset_bottom = 1512.0
-stream = ExtResource("7_hn8xl")
-
-[node name="scanbalken_right" type="VideoStreamPlayer" parent="."]
-layout_mode = 0
-offset_left = 729.0
-offset_top = 792.0
-offset_right = 1039.0
-offset_bottom = 1512.0
-stream = ExtResource("7_hn8xl")
-
-[node name="AuflageGruen" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(515, 1154)
-texture = ExtResource("9_65x8f")
-
-[node name="AuflageRot" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(514, 1153)
-texture = ExtResource("9_qrh7d")
-
-[node name="AuflageLila" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(514, 1152)
-texture = ExtResource("5_e2h6s")
-
-[node name="MainText" type="Label" parent="."]
-layout_mode = 0
-offset_left = 58.0
-offset_top = 82.0
-offset_right = 495.0
-offset_bottom = 678.0
-theme_override_fonts/font = ExtResource("10_f3tyj")
-theme_override_font_sizes/font_size = 14
-text = "loremipcum"
-autowrap_mode = 2
-
-[node name="MainTextDisplay" type="RichTextLabel" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 64.0
-offset_top = 83.0
-offset_right = 487.0
-offset_bottom = 675.0
-theme_override_fonts/normal_font = SubResource("SystemFont_ovfvp")
-text = "Für heute sind leider keine Events eingetragen"
 
 [node name="sounds" type="Node" parent="."]
 
@@ -213,7 +129,63 @@ stream = ExtResource("25_ojdyw")
 [node name="message" type="AudioStreamPlayer" parent="sounds"]
 stream = ExtResource("26_g1htn")
 
-[node name="scanning" type="ColorRect" parent="."]
+[node name="top" type="Control" parent="."]
+anchors_preset = 0
+
+[node name="handscan" type="AnimatedSprite2D" parent="top"]
+position = Vector2(279, 374)
+sprite_frames = ExtResource("4_lllsg")
+
+[node name="HandPulse" type="VideoStreamPlayer" parent="top"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 54.0
+offset_right = 518.0
+offset_bottom = 694.0
+stream = ExtResource("3_0csxm")
+
+[node name="koerperscan" type="VideoStreamPlayer" parent="top"]
+layout_mode = 0
+offset_left = 515.0
+offset_top = 60.0
+offset_right = 1155.0
+offset_bottom = 540.0
+rotation = 1.5708
+stream = ExtResource("21_pr2td")
+
+[node name="Bodyscan" type="Sprite2D" parent="top"]
+visible = false
+position = Vector2(257.25, 379.209)
+scale = Vector2(0.496199, 0.496199)
+texture = ExtResource("19_6rneq")
+
+[node name="Region" type="Sprite2D" parent="top/Bodyscan"]
+position = Vector2(-64.994, 41.8995)
+scale = Vector2(2.01532, 2.01532)
+texture = ExtResource("20_gc6ln")
+
+[node name="GreenScreen" type="Sprite2D" parent="top"]
+visible = false
+position = Vector2(277.875, 378.5)
+scale = Vector2(486.25, 645)
+texture = ExtResource("5_bdp8d")
+
+[node name="ScreenBackground" type="Sprite2D" parent="top"]
+position = Vector2(512, 384)
+texture = ExtResource("1_bpycg")
+
+[node name="MainText" type="Label" parent="top"]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 82.0
+offset_right = 495.0
+offset_bottom = 678.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 16
+text = "loremipcum"
+autowrap_mode = 2
+
+[node name="scanning" type="ColorRect" parent="top"]
 visible = false
 layout_mode = 0
 offset_left = 514.0
@@ -222,7 +194,7 @@ offset_right = 1022.0
 offset_bottom = 119.0
 color = Color(0.286275, 0, 0.286275, 1)
 
-[node name="Label" type="Label" parent="scanning"]
+[node name="Label" type="Label" parent="top/scanning"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -237,14 +209,15 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "scanning"
 
-[node name="moleculare_structur" type="Control" parent="."]
+[node name="moleculare_structur" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 542.0
 offset_top = 181.0
 offset_right = 1004.0
 offset_bottom = 312.0
 
-[node name="Panel1" type="Panel" parent="moleculare_structur"]
+[node name="Panel1" type="Panel" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 104.0
@@ -253,7 +226,7 @@ offset_right = 121.0
 offset_bottom = 108.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="Panel2" type="Panel" parent="moleculare_structur"]
+[node name="Panel2" type="Panel" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 7.0
@@ -262,13 +235,13 @@ offset_right = 121.0
 offset_bottom = 108.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_u5qfl")
 
-[node name="Molekuel" type="Sprite2D" parent="moleculare_structur/Panel2"]
+[node name="Molekuel" type="Sprite2D" parent="top/moleculare_structur/Panel2"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(57, 41.5)
 scale = Vector2(1.06422, 0.920454)
 texture = ExtResource("22_6r3pq")
 
-[node name="title" type="Label" parent="moleculare_structur"]
+[node name="title" type="Label" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -278,7 +251,7 @@ offset_bottom = 24.0
 theme_override_fonts/font = ExtResource("10_f3tyj")
 text = "moleculare structur"
 
-[node name="zeile1" type="Label" parent="moleculare_structur"]
+[node name="zeile1" type="Label" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -289,7 +262,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Electrische Felder & Wellen"
 
-[node name="zeile2" type="Label" parent="moleculare_structur"]
+[node name="zeile2" type="Label" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -300,7 +273,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Quantenanalyse"
 
-[node name="zeile3" type="Label" parent="moleculare_structur"]
+[node name="zeile3" type="Label" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -311,7 +284,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Atomare Zusammensetzung"
 
-[node name="zeile4" type="Label" parent="moleculare_structur"]
+[node name="zeile4" type="Label" parent="top/moleculare_structur"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -322,14 +295,15 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Datensynthese"
 
-[node name="genetische_transcription" type="Control" parent="."]
+[node name="genetische_transcription" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 530.0
 offset_top = 322.0
 offset_right = 975.0
 offset_bottom = 508.0
 
-[node name="Panel1" type="Panel" parent="genetische_transcription"]
+[node name="Panel1" type="Panel" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 116.0
@@ -338,7 +312,7 @@ offset_right = 133.0
 offset_bottom = 154.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="Panel2" type="Panel" parent="genetische_transcription"]
+[node name="Panel2" type="Panel" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 68.0
@@ -347,13 +321,13 @@ offset_right = 133.0
 offset_bottom = 128.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_u5qfl")
 
-[node name="Helix" type="Sprite2D" parent="genetische_transcription/Panel2"]
+[node name="Helix" type="Sprite2D" parent="top/genetische_transcription/Panel2"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(29.5, 46.5)
 scale = Vector2(0.983871, 0.834862)
 texture = ExtResource("23_hflda")
 
-[node name="title" type="Label" parent="genetische_transcription"]
+[node name="title" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -363,7 +337,7 @@ offset_bottom = 29.0
 theme_override_fonts/font = ExtResource("10_f3tyj")
 text = "genetische transcription"
 
-[node name="zeile1" type="Label" parent="genetische_transcription"]
+[node name="zeile1" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -374,7 +348,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Analyse der Alpha-Helix"
 
-[node name="zeile2" type="Label" parent="genetische_transcription"]
+[node name="zeile2" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -385,7 +359,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Arten der Pilzgattung Candida"
 
-[node name="zeile3" type="Label" parent="genetische_transcription"]
+[node name="zeile3" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -396,7 +370,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Mitochondrien"
 
-[node name="zeile4" type="Label" parent="genetische_transcription"]
+[node name="zeile4" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -407,7 +381,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> von Crosophila"
 
-[node name="zeile5" type="Label" parent="genetische_transcription"]
+[node name="zeile5" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -418,7 +392,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> höherer Pflanzen"
 
-[node name="zeile6" type="Label" parent="genetische_transcription"]
+[node name="zeile6" type="Label" parent="top/genetische_transcription"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -429,14 +403,15 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> von Säugern"
 
-[node name="lebensform_hercunft" type="Control" parent="."]
+[node name="lebensform_hercunft" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 540.0
 offset_top = 500.0
 offset_right = 940.0
 offset_bottom = 663.0
 
-[node name="Panel1" type="Panel" parent="lebensform_hercunft"]
+[node name="Panel1" type="Panel" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 106.0
@@ -445,7 +420,7 @@ offset_right = 123.0
 offset_bottom = 144.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="Panel2" type="Panel" parent="lebensform_hercunft"]
+[node name="Panel2" type="Panel" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 12.0
@@ -454,13 +429,13 @@ offset_right = 123.0
 offset_bottom = 103.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_u5qfl")
 
-[node name="Welt" type="Sprite2D" parent="lebensform_hercunft/Panel2"]
+[node name="Welt" type="Sprite2D" parent="top/lebensform_hercunft/Panel2"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(54.75, 30.75)
 scale = Vector2(1.00459, 0.943549)
 texture = ExtResource("24_q8wyc")
 
-[node name="title" type="Label" parent="lebensform_hercunft"]
+[node name="title" type="Label" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 140.0
@@ -470,7 +445,7 @@ offset_bottom = 40.0
 theme_override_fonts/font = ExtResource("10_f3tyj")
 text = "lebensform & hercunft"
 
-[node name="zeile1" type="Label" parent="lebensform_hercunft"]
+[node name="zeile1" type="Label" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 140.0
@@ -481,7 +456,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Abgleich mit dem cosmolab"
 
-[node name="zeile2" type="Label" parent="lebensform_hercunft"]
+[node name="zeile2" type="Label" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 140.0
@@ -492,7 +467,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Welten der Sauerstoffatmer"
 
-[node name="zeile3" type="Label" parent="lebensform_hercunft"]
+[node name="zeile3" type="Label" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 140.0
@@ -503,7 +478,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Verbotene Welten"
 
-[node name="zeile4" type="Label" parent="lebensform_hercunft"]
+[node name="zeile4" type="Label" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 140.0
@@ -514,7 +489,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Virtuelle Orte"
 
-[node name="zeile5" type="Label" parent="lebensform_hercunft"]
+[node name="zeile5" type="Label" parent="top/lebensform_hercunft"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 140.0
@@ -525,14 +500,15 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Träume"
 
-[node name="grundtonus" type="Control" parent="."]
+[node name="grundtonus" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 542.0
 offset_top = 181.0
 offset_right = 1004.0
 offset_bottom = 312.0
 
-[node name="Panel1" type="Panel" parent="grundtonus"]
+[node name="Panel1" type="Panel" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 104.0
@@ -541,7 +517,7 @@ offset_right = 121.0
 offset_bottom = 153.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="Panel2" type="Panel" parent="grundtonus"]
+[node name="Panel2" type="Panel" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 52.0
@@ -550,12 +526,12 @@ offset_right = 121.0
 offset_bottom = 135.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_u5qfl")
 
-[node name="Grundtonus" type="Sprite2D" parent="grundtonus/Panel2"]
+[node name="Grundtonus" type="Sprite2D" parent="top/grundtonus/Panel2"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(36, 58)
 texture = ExtResource("27_3med6")
 
-[node name="title" type="Label" parent="grundtonus"]
+[node name="title" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -565,7 +541,7 @@ offset_bottom = 24.0
 theme_override_fonts/font = ExtResource("10_f3tyj")
 text = "grundtonus"
 
-[node name="zeile1" type="Label" parent="grundtonus"]
+[node name="zeile1" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -576,7 +552,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Topographie"
 
-[node name="zeile2" type="Label" parent="grundtonus"]
+[node name="zeile2" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -587,7 +563,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Gliedmaße"
 
-[node name="zeile3" type="Label" parent="grundtonus"]
+[node name="zeile3" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -598,7 +574,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Topologie"
 
-[node name="zeile4" type="Label" parent="grundtonus"]
+[node name="zeile4" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -609,7 +585,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Scelettaufbau"
 
-[node name="zeile5" type="Label" parent="grundtonus"]
+[node name="zeile5" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -620,7 +596,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Wirbelsäule"
 
-[node name="zeile6" type="Label" parent="grundtonus"]
+[node name="zeile6" type="Label" parent="top/grundtonus"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 138.0
@@ -631,14 +607,15 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Organe und Innereien"
 
-[node name="zellen" type="Control" parent="."]
+[node name="zellen" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 530.0
 offset_top = 322.0
 offset_right = 975.0
 offset_bottom = 508.0
 
-[node name="Panel1" type="Panel" parent="zellen"]
+[node name="Panel1" type="Panel" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 116.0
@@ -647,7 +624,7 @@ offset_right = 133.0
 offset_bottom = 180.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="Panel2" type="Panel" parent="zellen"]
+[node name="Panel2" type="Panel" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 23.0
@@ -656,12 +633,12 @@ offset_right = 133.0
 offset_bottom = 154.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_u5qfl")
 
-[node name="Zellen" type="Sprite2D" parent="zellen/Panel2"]
+[node name="Zellen" type="Sprite2D" parent="top/zellen/Panel2"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(57, 44)
 texture = ExtResource("28_5sy7g")
 
-[node name="title" type="Label" parent="zellen"]
+[node name="title" type="Label" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -671,7 +648,7 @@ offset_bottom = 71.0
 theme_override_fonts/font = ExtResource("10_f3tyj")
 text = "zellen"
 
-[node name="zeile1" type="Label" parent="zellen"]
+[node name="zeile1" type="Label" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -682,7 +659,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Cerngrundbasisplasma"
 
-[node name="zeile2" type="Label" parent="zellen"]
+[node name="zeile2" type="Label" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -693,7 +670,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Chromatin"
 
-[node name="zeile3" type="Label" parent="zellen"]
+[node name="zeile3" type="Label" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -704,7 +681,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Ribosom"
 
-[node name="zeile4" type="Label" parent="zellen"]
+[node name="zeile4" type="Label" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -715,7 +692,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Endoplasmatisches Reticulum"
 
-[node name="zeile5" type="Label" parent="zellen"]
+[node name="zeile5" type="Label" parent="top/zellen"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 150.0
@@ -726,14 +703,15 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Tunnelproteine"
 
-[node name="gehirn" type="Control" parent="."]
+[node name="gehirn" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 554.0
 offset_top = 531.0
 offset_right = 852.0
 offset_bottom = 662.0
 
-[node name="Panel1" type="Panel" parent="gehirn"]
+[node name="Panel1" type="Panel" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 92.0
@@ -742,7 +720,7 @@ offset_right = 109.0
 offset_bottom = 118.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="Panel2" type="Panel" parent="gehirn"]
+[node name="Panel2" type="Panel" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 15.0
@@ -751,13 +729,13 @@ offset_right = 109.0
 offset_bottom = 118.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_u5qfl")
 
-[node name="Gehirn" type="Sprite2D" parent="gehirn/Panel2"]
+[node name="Gehirn" type="Sprite2D" parent="top/gehirn/Panel2"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(46, 44)
 scale = Vector2(1.11475, 1)
 texture = ExtResource("29_04obm")
 
-[node name="title" type="Label" parent="gehirn"]
+[node name="title" type="Label" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 126.0
@@ -767,7 +745,7 @@ offset_bottom = 30.0
 theme_override_fonts/font = ExtResource("10_f3tyj")
 text = "gehirn"
 
-[node name="zeile1" type="Label" parent="gehirn"]
+[node name="zeile1" type="Label" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 126.0
@@ -778,7 +756,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Thermaler PET scan"
 
-[node name="zeile2" type="Label" parent="gehirn"]
+[node name="zeile2" type="Label" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 126.0
@@ -789,7 +767,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Cerebraler Cortex"
 
-[node name="zeile3" type="Label" parent="gehirn"]
+[node name="zeile3" type="Label" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 126.0
@@ -800,7 +778,7 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "> Occipatalanalyse"
 
-[node name="zeile4" type="Label" parent="gehirn"]
+[node name="zeile4" type="Label" parent="top/gehirn"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 126.0
@@ -811,42 +789,109 @@ theme_override_fonts/font = ExtResource("10_f3tyj")
 theme_override_font_sizes/font_size = 11
 text = "Intelligenzquotient"
 
-[node name="genotyp_explorer_bottom" type="Control" parent="."]
+[node name="vorgang_abgebrochen" type="Control" parent="top"]
+visible = false
+layout_mode = 3
 anchors_preset = 0
-offset_left = 781.0
-offset_top = 785.0
-offset_right = 1009.0
-offset_bottom = 818.0
+offset_left = 542.0
+offset_top = 181.0
+offset_right = 1004.0
+offset_bottom = 361.0
 
-[node name="explorer" type="Label" parent="genotyp_explorer_bottom"]
+[node name="Panel1" type="Panel" parent="top/vorgang_abgebrochen"]
+visible = false
 layout_mode = 0
-offset_left = 115.0
-offset_top = 3.0
-offset_right = 225.0
-offset_bottom = 38.0
-theme_override_fonts/font = ExtResource("11_vobjc")
-theme_override_font_sizes/font_size = 24
-text = "explorer"
+offset_left = 104.0
+offset_top = -2.0
+offset_right = 121.0
+offset_bottom = 133.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bfino")
 
-[node name="genotyp" type="Label" parent="genotyp_explorer_bottom"]
-modulate = Color(0.360784, 0.360784, 0.360784, 1)
+[node name="title" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.584314, 0.419608, 1)
 layout_mode = 0
-offset_left = 13.0
-offset_top = 3.0
-offset_right = 107.0
-offset_bottom = 38.0
-theme_override_fonts/font = ExtResource("11_vobjc")
-theme_override_font_sizes/font_size = 24
-text = "genotyp"
+offset_left = 138.0
+offset_top = -2.0
+offset_right = 348.0
+offset_bottom = 24.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+text = "vorgang abgebrochen"
 
-[node name="genotyp_explorer_top" type="Control" parent="."]
+[node name="zeile1" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.12549, 0, 1)
+layout_mode = 0
+offset_left = 138.0
+offset_top = 26.0
+offset_right = 348.0
+offset_bottom = 45.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 11
+text = "Extremität zu früh entfernt"
+
+[node name="zeile2" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.12549, 0, 1)
+layout_mode = 0
+offset_left = 138.0
+offset_top = 47.0
+offset_right = 348.0
+offset_bottom = 66.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 11
+text = "> Alpha-Helix nicht ercannt"
+
+[node name="zeile3" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.12549, 0, 1)
+layout_mode = 0
+offset_left = 138.0
+offset_top = 68.0
+offset_right = 348.0
+offset_bottom = 87.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 11
+text = "> Unbecannte Macht"
+
+[node name="zeile4" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.12549, 0, 1)
+layout_mode = 0
+offset_left = 138.0
+offset_top = 89.0
+offset_right = 348.0
+offset_bottom = 108.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 11
+text = "> Lebensform unbecannt"
+
+[node name="zeile5" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.12549, 0, 1)
+layout_mode = 0
+offset_left = 138.0
+offset_top = 109.0
+offset_right = 348.0
+offset_bottom = 128.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 11
+text = "> Wiederholen, ignorieren, abbrechen?"
+
+[node name="zeile6" type="Label" parent="top/vorgang_abgebrochen"]
+modulate = Color(1, 0.584314, 0.419608, 1)
+layout_mode = 0
+offset_left = 138.0
+offset_top = 151.0
+offset_right = 416.0
+offset_bottom = 170.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 11
+text = "nicht identifiziert"
+
+[node name="genotyp_explorer_top" type="Control" parent="top"]
+layout_mode = 3
 anchors_preset = 0
 offset_left = 779.0
 offset_top = 734.0
 offset_right = 1007.0
 offset_bottom = 767.0
 
-[node name="explorer" type="Label" parent="genotyp_explorer_top"]
+[node name="explorer" type="Label" parent="top/genotyp_explorer_top"]
 layout_mode = 0
 offset_left = 115.0
 offset_top = 3.0
@@ -856,7 +901,7 @@ theme_override_fonts/font = ExtResource("11_vobjc")
 theme_override_font_sizes/font_size = 24
 text = "explorer"
 
-[node name="genotyp" type="Label" parent="genotyp_explorer_top"]
+[node name="genotyp" type="Label" parent="top/genotyp_explorer_top"]
 modulate = Color(0.360784, 0.360784, 0.360784, 1)
 layout_mode = 0
 offset_left = 13.0
@@ -867,30 +912,169 @@ theme_override_fonts/font = ExtResource("11_vobjc")
 theme_override_font_sizes/font_size = 24
 text = "genotyp"
 
+[node name="fremdkoerper" type="Panel" parent="top"]
+visible = false
+layout_mode = 0
+offset_left = 472.0
+offset_top = 163.0
+offset_right = 964.0
+offset_bottom = 414.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xqh43")
+
+[node name="header" type="Panel" parent="top/fremdkoerper"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 28.0
+offset_right = 491.0
+offset_bottom = 69.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vmnnd")
+
+[node name="Achtung" type="Sprite2D" parent="top/fremdkoerper"]
+position = Vector2(54, 50)
+texture = ExtResource("29_vewli")
+
+[node name="IconFlugzeug" type="Sprite2D" parent="top/fremdkoerper"]
+visible = false
+position = Vector2(95, 174)
+scale = Vector2(1.33, 1.33)
+texture = ExtResource("30_kynu0")
+
+[node name="IconImplantat" type="Sprite2D" parent="top/fremdkoerper"]
+visible = false
+position = Vector2(95, 174)
+scale = Vector2(1.33, 1.33)
+texture = ExtResource("31_4xb48")
+
+[node name="IconMate" type="Sprite2D" parent="top/fremdkoerper"]
+visible = false
+position = Vector2(95, 174)
+scale = Vector2(1.33, 1.33)
+texture = ExtResource("32_ag3mm")
+
+[node name="title" type="Label" parent="top/fremdkoerper"]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 31.0
+offset_right = 446.0
+offset_bottom = 66.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 20
+text = "fremdcörper identifiziert"
+
+[node name="text" type="Label" parent="top/fremdkoerper"]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 107.0
+offset_right = 475.0
+offset_bottom = 212.0
+theme_override_fonts/font = ExtResource("10_f3tyj")
+theme_override_font_sizes/font_size = 14
+text = "Bitte begeben sie sich in den bereich social engineering."
+autowrap_mode = 2
+
+[node name="DisplayMessageTimer" type="Timer" parent="top"]
+
+[node name="bottom" type="Window" parent="."]
+mode = 3
+title = "bottom"
+position = Vector2i(1024, 36)
+size = Vector2i(1024, 768)
+content_scale_size = Vector2i(1024, 768)
+content_scale_mode = 2
+content_scale_aspect = 1
+
+[node name="AuflageBackground" type="Sprite2D" parent="bottom"]
+texture = ExtResource("1_j8umw")
+centered = false
+
+[node name="scanbalken_left" type="VideoStreamPlayer" parent="bottom"]
+offset_left = -8.0
+offset_top = 24.0
+offset_right = 302.0
+offset_bottom = 744.0
+stream = ExtResource("7_hn8xl")
+
+[node name="scanbalken_right" type="VideoStreamPlayer" parent="bottom"]
+offset_left = 729.0
+offset_top = 24.0
+offset_right = 1039.0
+offset_bottom = 744.0
+stream = ExtResource("7_hn8xl")
+
+[node name="AuflageGruen" type="Sprite2D" parent="bottom"]
+visible = false
+texture = ExtResource("9_65x8f")
+offset = Vector2(512, 384)
+
+[node name="AuflageRot" type="Sprite2D" parent="bottom"]
+visible = false
+texture = ExtResource("9_qrh7d")
+offset = Vector2(512, 384)
+
+[node name="AuflageLila" type="Sprite2D" parent="bottom"]
+visible = false
+texture = ExtResource("5_e2h6s")
+offset = Vector2(512, 384)
+
+[node name="AuflageGruenLogin" type="Sprite2D" parent="bottom"]
+visible = false
+texture = ExtResource("35_pom3l")
+offset = Vector2(512, 384)
+
+[node name="genotyp_explorer_bottom" type="Control" parent="bottom"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 781.0
+offset_top = 17.0
+offset_right = 1009.0
+offset_bottom = 50.0
+
+[node name="explorer" type="Label" parent="bottom/genotyp_explorer_bottom"]
+layout_mode = 0
+offset_left = 115.0
+offset_top = 3.0
+offset_right = 225.0
+offset_bottom = 38.0
+theme_override_fonts/font = ExtResource("11_vobjc")
+theme_override_font_sizes/font_size = 24
+text = "explorer"
+
+[node name="genotyp" type="Label" parent="bottom/genotyp_explorer_bottom"]
+modulate = Color(0.360784, 0.360784, 0.360784, 1)
+layout_mode = 0
+offset_left = 13.0
+offset_top = 3.0
+offset_right = 107.0
+offset_bottom = 38.0
+theme_override_fonts/font = ExtResource("11_vobjc")
+theme_override_font_sizes/font_size = 24
+text = "genotyp"
+
+[node name="Pfeil Timer" type="Timer" parent="bottom"]
+wait_time = 2.0
+autostart = true
+
+[node name="handauflage" type="Control" parent="bottom"]
+custom_minimum_size = Vector2(1024, 768)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="pfeil" type="Sprite2D" parent="bottom"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(512, 372)
+texture = ExtResource("4_7t2kg")
+offset = Vector2(0, -200)
+
 [node name="MQTT" type="Node" parent="."]
 script = ExtResource("31_q5j4j")
-
-[node name="DisplayMessageTimer" type="Timer" parent="."]
 
 [node name="ResetTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="AuflageGruenLogin" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(515, 1148)
-texture = ExtResource("35_pom3l")
-
-[node name="handauflage" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 244.0
-offset_top = 805.0
-offset_right = 758.0
-offset_bottom = 1459.0
-
-[connection signal="gui_input" from="." to="." method="_on_gui_input"]
-[connection signal="finished" from="HandPulse" to="." method="_on_hand_pulse_finished"]
-[connection signal="timeout" from="Pfeil Timer" to="." method="_on_timer_timeout"]
-[connection signal="finished" from="scanbalken_left" to="." method="_on_scanbalken_finished"]
 [connection signal="finished" from="sounds/bioscan" to="." method="_on_bioscan_finished"]
 [connection signal="finished" from="sounds/handscan" to="." method="_on_handscan_sound_finished"]
 [connection signal="finished" from="sounds/bitte_stehenbleiben" to="." method="_on_bitte_stehenbleiben_finished"]
@@ -901,8 +1085,9 @@ offset_bottom = 1459.0
 [connection signal="finished" from="sounds/willkommen" to="." method="_on_willkommen_finished"]
 [connection signal="finished" from="sounds/beep_abort" to="." method="_on_beep_abort_finished"]
 [connection signal="finished" from="sounds/nicht_identifiziert" to="." method="_on_nicht_identifiziert_finished"]
-[connection signal="finished" from="sounds/success" to="." method="_on_success_finished"]
+[connection signal="finished" from="bottom/scanbalken_left" to="." method="_on_scanbalken_finished"]
+[connection signal="timeout" from="bottom/Pfeil Timer" to="." method="_on_timer_timeout"]
+[connection signal="gui_input" from="bottom/handauflage" to="." method="_on_control_gui_input"]
 [connection signal="broker_connected" from="MQTT" to="." method="_on_mqtt_broker_connected"]
 [connection signal="received_message" from="MQTT" to="." method="_on_mqtt_received_message"]
 [connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]
-[connection signal="gui_input" from="handauflage" to="." method="_on_control_gui_input"]
