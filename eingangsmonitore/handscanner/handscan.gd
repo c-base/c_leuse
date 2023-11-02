@@ -15,6 +15,7 @@ var broker_url = "tcp://10.0.1.17"
 @onready var pfeil = $bottom/pfeil
 @onready var handscan = $top/handscan
 @onready var handscan_sounds = [$sounds/bioscan, $sounds/handscan, $sounds/grundtonus, $sounds/zellen, $sounds/bakterien, $sounds/success]
+@onready var _MainWindow: Window = get_window()
 
 var pfeile = []
 var scan_finished = false
@@ -27,6 +28,8 @@ var who_message = ""
 var who = ""
 
 func _ready():
+	ProjectSettings.set_setting("display/window/per_pixel_transparency/allowed", true)
+	# _MainWindow.mode = Window.MODE_WINDOWED
 	for n in 12:
 		var pfeil_clone = pfeil.duplicate()
 		pfeil_clone.rotate(deg_to_rad(n*360/12))
@@ -37,7 +40,7 @@ func _ready():
 	display_events()
 	_on_timer_timeout()
 	$MQTT.client_id = "handscanner"
-	# $MQTT.verbose_level = 0
+	$MQTT.verbose_level = 0
 	$MQTT.connect_to_broker(broker_url)
 
 func _on_timer_timeout():
@@ -59,6 +62,14 @@ func start_handscan():
 	$bottom/AuflageLila.show()
 	$bottom/scanbalken_left.play()
 	$bottom/scanbalken_right.play()
+	var tween_left = get_tree().create_tween()
+	tween_left.tween_property($bottom/scanbalken_left, "position", Vector2(-8, 0), 0.0)
+	tween_left.tween_property($bottom/scanbalken_left, "position", Vector2(-8, 550), 5.0)
+	tween_left.tween_property($bottom/scanbalken_left, "position", Vector2(-8, 0), 5.0)
+	var tween_right = get_tree().create_tween()
+	tween_right.tween_property($bottom/scanbalken_right, "position", Vector2(729, 0), 0.0)
+	tween_right.tween_property($bottom/scanbalken_right, "position", Vector2(729, 550), 5.0)
+	tween_right.tween_property($bottom/scanbalken_right, "position", Vector2(729, 0), 5.0)
 	$sounds/bioscan.play()
 	for n in 12:
 		pfeile[n].hide()

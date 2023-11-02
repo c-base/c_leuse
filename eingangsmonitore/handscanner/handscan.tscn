@@ -8,7 +8,6 @@
 [ext_resource type="SpriteFrames" uid="uid://j26cyrrdq3lt" path="res://assets/03_handscan/handscan.tres" id="4_lllsg"]
 [ext_resource type="Texture2D" uid="uid://buxmrjh8f8yuw" path="res://assets/05_handscan_erkannt/green_screen.png" id="5_bdp8d"]
 [ext_resource type="Texture2D" uid="uid://b5wwd0ap3c8pm" path="res://assets/03_handscan/auflage_lila.png" id="5_e2h6s"]
-[ext_resource type="VideoStream" path="res://assets/03_handscan/scanb.ogv" id="7_hn8xl"]
 [ext_resource type="Texture2D" uid="uid://puuamvh8ixjd" path="res://assets/05_handscan_erkannt/auflage_gruen.png" id="9_65x8f"]
 [ext_resource type="Texture2D" uid="uid://xt8wnp52dplj" path="res://assets/04_handscan_abgebrochen/auflage_rot.png" id="9_qrh7d"]
 [ext_resource type="AudioStream" uid="uid://bwu3q7eesgm6i" path="res://assets/cound/handscan.wav" id="10_7calq"]
@@ -42,6 +41,7 @@
 [ext_resource type="Script" path="res://addons/mqtt/mqtt.gd" id="31_q5j4j"]
 [ext_resource type="Texture2D" uid="uid://5sdmfyx1sg4r" path="res://assets/10_fremdkoerper/icon_mate.png" id="32_ag3mm"]
 [ext_resource type="Texture2D" uid="uid://djcge7fl7sauc" path="res://assets/login/auflage_gruen_login.png" id="35_pom3l"]
+[ext_resource type="VideoStream" path="res://assets/movies/scanbalken.ogv" id="36_dqslu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfino"]
 bg_color = Color(0.352941, 0.352941, 0, 1)
@@ -992,14 +992,14 @@ offset_left = -8.0
 offset_top = 24.0
 offset_right = 302.0
 offset_bottom = 744.0
-stream = ExtResource("7_hn8xl")
+stream = ExtResource("36_dqslu")
 
 [node name="scanbalken_right" type="VideoStreamPlayer" parent="bottom"]
 offset_left = 729.0
 offset_top = 24.0
 offset_right = 1039.0
 offset_bottom = 744.0
-stream = ExtResource("7_hn8xl")
+stream = ExtResource("36_dqslu")
 
 [node name="AuflageGruen" type="Sprite2D" parent="bottom"]
 visible = false
