@@ -234,7 +234,7 @@ func _on_mqtt_received_message(topic, message):
 		leaving_message(json.data)
 	if topic == TOPIC_TODAYS_EVENTS:
 		if len(json.data) > 0:
-			event_message = TODAYS_EVENTS % "\n".join(json.data)
+			event_message = TODAYS_EVENTS % "\n".join(json.data) + "\n\n"
 		else:
 			event_message = NO_EVENTS
 		display_events()
