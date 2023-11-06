@@ -17,6 +17,7 @@ var broker_url = "tcp://10.0.1.17"
 @onready var handscan_sounds = [$sounds/bioscan, $sounds/handscan, $sounds/grundtonus, $sounds/zellen, $sounds/bakterien, $sounds/success]
 @onready var _MainWindow: Window = get_window()
 
+var DEBUG = false
 var pfeile = []
 var scan_finished = false
 var handscan_ready = true
@@ -117,8 +118,16 @@ func stop_handscan_sounds():
 
 func _unhandled_input(event):
 	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_ESCAPE:
-			get_tree().quit()
+		if event.pressed:
+			if event.keycode == KEY_ESCAPE:
+				get_tree().quit()
+			if event.keycode == KEY_D:
+				if DEBUG:
+					$MQTT.verbose_level = 0
+					DEBUG = false
+				else:
+					$MQTT.verbose_level = 3
+					DEBUG = true
 
 func _on_control_gui_input(event):
 	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or event is InputEventScreenTouch:
@@ -216,6 +225,8 @@ func get_motivation_message():
 	
 func _on_mqtt_received_message(topic, message):
 	var json = JSON.new()
+	if DEBUG:
+		print(message)
 	json.parse(message)
 	if topic == TOPIC_BOARDING:
 		boarding_message(json.data['user'])
