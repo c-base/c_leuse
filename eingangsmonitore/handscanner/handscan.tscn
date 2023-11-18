@@ -977,7 +977,7 @@ autowrap_mode = 2
 [node name="bottom" type="Window" parent="."]
 mode = 3
 title = "bottom"
-position = Vector2i(1024, 36)
+position = Vector2i(0, 36)
 size = Vector2i(1024, 768)
 content_scale_size = Vector2i(1024, 768)
 content_scale_mode = 2

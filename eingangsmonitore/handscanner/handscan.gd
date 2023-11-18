@@ -130,6 +130,7 @@ func _unhandled_input(event):
 					DEBUG = true
 
 func _on_control_gui_input(event):
+	print(event)
 	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or event is InputEventScreenTouch:
 		if event.pressed:
 			start_handscan()
@@ -227,7 +228,14 @@ func _on_mqtt_received_message(topic, message):
 	var json = JSON.new()
 	if DEBUG:
 		print(message)
+	if topic == "handscanner/touched":q
+		if message == "True":
+			start_handscan()
+		else:
+			stop_handscan()
+		return
 	json.parse(message)
+	
 	if topic == TOPIC_BOARDING:
 		boarding_message(json.data['user'])
 	if topic == TOPIC_USER_WHO:
@@ -272,6 +280,7 @@ func message(msg, duration=10):
 
 func _on_mqtt_broker_connected():
 	$MQTT.subscribe("user/+")
+	$MQTT.subscribe("handscanner/+")
 	$MQTT.subscribe(TOPIC_TODAYS_EVENTS)
 
 func _on_reset_timer_timeout():
