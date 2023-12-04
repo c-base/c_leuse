@@ -1,0 +1,10 @@
+[Unit]
+Description=c_leuse_leds
+
+[Service]
+User=smile
+WorkingDirectory=/opt/c_leuse_leds
+ExecStart=/opt/c_leuse_leds/venv/bin/python3 /opt/c_leuse_leds/c_leuse_leds.py
+
+[Install]
+WantedBy=multi-user.target

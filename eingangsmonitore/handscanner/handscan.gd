@@ -55,6 +55,7 @@ func start_handscan():
 	if handscan_state != "ready":
 		return
 	handscan_state = "scanning"
+	$MQTT.publish("c_leuse/led_pattern", "scanning", false, 0)
 	$top/scanning.show()
 	scan_finished = false
 	$top/MainText.hide()
@@ -80,6 +81,7 @@ func stop_handscan():
 	if handscan_state not in "scanning":
 		return
 	if not scan_finished:
+		$MQTT.publish("c_leuse/led_pattern", "failure", false, 0)
 		cleanup()
 		$sounds/beep_abort.play()
 		$bottom/AuflageRot.show()
@@ -130,7 +132,6 @@ func _unhandled_input(event):
 					DEBUG = true
 
 func _on_control_gui_input(event):
-	print(event)
 	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or event is InputEventScreenTouch:
 		if event.pressed:
 			start_handscan()
@@ -152,6 +153,7 @@ func _on_scanbalken_finished():
 		$top/GreenScreen.show()
 		$sounds/willkommen.play()
 		handscan_state = "success"
+		$MQTT.publish("c_leuse/led_pattern", "success", false, 0)
 	else:
 		if result == 2:
 			$top/fremdkoerper/text.text = fremdkoerper_flugzeug
@@ -174,6 +176,7 @@ func _on_scanbalken_finished():
 		$bottom/AuflageLila.hide()
 		$bottom/AuflageRot.show()
 		handscan_state = "failure"
+		$MQTT.publish("c_leuse/led_pattern", "failure", false, 0)
 	scan_finished = true
 
 func _on_bioscan_finished():
@@ -220,6 +223,7 @@ func reset():
 	for n in 12:
 		pfeile[n].show()
 	handscan_state = "ready"
+	$MQTT.publish("c_leuse/led_pattern", "default", false, 0)
 
 func get_motivation_message():
 	return "We are excellent to each other!\n\n"
@@ -228,7 +232,7 @@ func _on_mqtt_received_message(topic, message):
 	var json = JSON.new()
 	if DEBUG:
 		print(message)
-	if topic == "handscanner/touched":q
+	if topic == "handscanner/touched":
 		if message == "True":
 			start_handscan()
 		else:
@@ -262,14 +266,16 @@ func boarding_message(user):
 	# if handscan_state != "ready":
 	# 	await get_tree().create_timer(2).timeout
 	# 	return boarding_message(user)
+	$MQTT.publish("c_leuse/led_pattern", "success", false, 0)
 	$sounds/login.play()
 	$bottom/AuflageGruenLogin.show()
 	message("Hallo " + user + ", willcommen auf der c-base!\n\n" + event_message + "\n\n" + who_message)
 
 func leaving_message(data):
+	$MQTT.publish("c_leuse/led_pattern", "success", false, 0)
 	$sounds/logout.play()
 	$bottom/AuflageGruenLogin.show()
-	var ceitloch = 4254
+	var ceitloch = who.ceitloch.get(data['user'])
 	message("Guten Heimflug %s!\n\nDu warst dieses mal fu:r %d secunden im ceitloch. dabei hast du circa %d Liter Sauerstoff umgesetzt und ungefa:hr %d mal geblinzelt." % [data['user'], ceitloch, ceitloch * 0.4, ceitloch / 5])
 
 func message(msg, duration=10):
